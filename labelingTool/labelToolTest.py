@@ -1,4 +1,9 @@
 # Note needs getch python package
+# https://pypi.python.org/pypi/getch#downloads
+#
+# USAGE
+# place image files in same folder, must also have folders named
+# people/ and noPeople/
 
 import numpy as np
 import scipy.ndimage as im
@@ -7,24 +12,18 @@ import getch
 import glob
 import os
 
-#x = im.imread('DesertRocks.png')
-#plt.imshow(x)
-#plt.show()
-
+# read in all png files
 imageFiles = glob.glob('*.png')
 
 print('f - people, j - no people')
 
-#plt.axis()
-plt.ion()
-
-
+# go through every file and classify image
 for file in imageFiles:
     image = im.imread(file)
     plt.imshow(image)
-    #plt.draw()
     plt.pause(0.05)
 
+    # read in input to move file into correct folder.
     while True:
         x = getch.getch()
         if x == 'f':
