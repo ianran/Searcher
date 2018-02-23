@@ -12,46 +12,46 @@ Git cheat sheet:
 [] = arguments
 // = comments on commands
 
-<h1>List of useful commands</h1>
+# List of useful commands
 
-git status                          // Tells you changed files and staged files.
-                                    // Staged files in green, unstaged files in red.
-git add [files to add to staging]   // moves files to add to staging to staged
-git add --all                       // moves all changed files to staged
-git commit -m "[commit message]"    // Commits all staged files with commit message.
-git commit                          // Commits, and starts default text editor for commit message
-                                        // Note: Default editor is often vi which can be closed with esc :x
-git push                            // Pushes local commits to server
-git pull                            // Pulls data from server, also merges at same time.
+git status                          // Tells you changed files and staged files.  
+                                    // Staged files in green, unstaged files in red.  
+git add [files to add to staging]   // moves files to add to staging to staged  
+git add --all                       // moves all changed files to staged  
+git commit -m "[commit message]"    // Commits all staged files with commit message.  
+git commit                          // Commits, and starts default text editor for commit message  
+                                        // Note: Default editor is often vi which can be closed with esc :x  
+git push                            // Pushes local commits to server  
+git pull                            // Pulls data from server, also merges at same time.  
 
-git fetch                           // Generic pulls data from server, does not merge.
-git log                             // Shows list of recent commits.
-git checkout [branch to checkout]   // Changes your repo to a different branch, note: can go to any arbitrary commit
-git branch -v                       // Shows list of branches
-git branch [branch name]            // Creates a new branch at the current branch.
-git merge [branch name]             // Merges your current branch with [branch name]
-git stash                           // Doesn't commit, but cleans working branch. (ONLY use if you want to get rid of current
-                                        unstaged data, after checking out another commit) (I don't know exactly what it does to be honest)
-
-
-<h1>Generic commit:</h1>
-
-git add [files to commit]
-git commit -m "[commit message]"
-git pull
-git push
+git fetch                           // Generic pulls data from server, does not merge.  
+git log                             // Shows list of recent commits.  
+git checkout [branch to checkout]   // Changes your repo to a different branch, note: can go to any arbitrary commit  
+git branch -v                       // Shows list of branches  
+git branch [branch name]            // Creates a new branch at the current branch.  
+git merge [branch name]             // Merges your current branch with [branch name]  
+git stash                           // Doesn't commit, but cleans working branch. (ONLY use if you want to get rid of current  
+                                        unstaged data, after checking out another commit) (I don't know exactly what it does to be honest)  
 
 
-<h1>Starting new development branch:</h1>
+# Generic commit:
 
-git checkout master
-git branch [dev branch name]
-git checkout [dev branch name]
-...  // various commits until code is working, may need to merge with somebody else's branch as well.
-git merge master
-... // make sure code is still working with latest master branch
-git status // MAKE SURE that working branch is clean (don't need to commit)
-git checkout master
-git merge [dev branch name]
-    // may need to commit again.
-git branch -d [dev branch name]
+git add [files to commit]  
+git commit -m "[commit message]"  
+git pull  
+git push  
+
+
+# Starting new development branch:
+
+git checkout master  
+git branch [dev branch name]  
+git checkout [dev branch name]  
+...  // various commits until code is working, may need to merge with somebody else's branch as well.  
+git merge master  
+... // make sure code is still working with latest master branch  
+git status // MAKE SURE that working branch is clean (don't need to commit)  
+git checkout master  
+git merge [dev branch name]  
+    // may need to commit again.  
+git branch -d [dev branch name]  
