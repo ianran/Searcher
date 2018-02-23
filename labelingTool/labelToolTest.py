@@ -16,19 +16,17 @@ import os
 # read in all png files
 imageFiles = glob.glob('*.png')
 
-print('f - people, j - no people, b - back')
-
 lastFile = None
 lastAnswer = None
 
 def labelSingleImage(file):
     global lastFile
     global lastAnswer
+    print('f - people, j - no people, b - back')
 
     image = im.imread(file)
     plt.imshow(image)
     plt.pause(0.05)
-    lastFile = file
 
     # read in input to move file into correct folder.
     while True:
@@ -36,10 +34,12 @@ def labelSingleImage(file):
         if x == 'f':
             os.rename(file, 'people/' + file)
             lastAnswer = 'people/'
+            print('moved to people')
             break
         elif x == 'j':
             os.rename(file, 'noPeople/' + file)
             lastAnswer = 'noPeople/'
+            print('moved to noPeople')
             break
         elif x == 'b':
             if lastFile == None:
@@ -50,6 +50,7 @@ def labelSingleImage(file):
                 tempLastFile = lastFile
                 lastFile == None
                 labelSingleImage(tempLastFile)
+    lastFile = file
 
 # go through every file and classify image
 for file in imageFiles:
