@@ -11,10 +11,12 @@ import matplotlib.pyplot as plt
 import getch
 import glob
 import os
+import sys
 
-
-# read in all png files
-imageFiles = glob.glob('*.png')
+# the directory to read images from
+feedDir = None
+noPeopleDir = None
+peopleDir = None
 
 lastFile = None
 lastAnswer = None
@@ -24,7 +26,9 @@ def labelSingleImage(file):
     global lastAnswer
     print('f - people, j - no people, b - back')
 
-    image = im.imread(file)
+    file = os.path.basename(file)
+
+    image = im.imread(feedDir + file)
     plt.imshow(image)
     plt.pause(0.05)
 
@@ -32,26 +36,41 @@ def labelSingleImage(file):
     while True:
         x = getch.getch()
         if x == 'f':
-            os.rename(file, 'people/' + file)
-            lastAnswer = 'people/'
+            os.rename(feedDir + file, peopleDir + file)
+            lastAnswer = peopleDir
             print('moved to people')
             break
         elif x == 'j':
-            os.rename(file, 'noPeople/' + file)
-            lastAnswer = 'noPeople/'
+            os.rename(feedDir + file, noPeopleDir + file)
+            lastAnswer = noPeopleDir
             print('moved to noPeople')
             break
         elif x == 'b':
             if lastFile == None:
                 print('Can not go back more than 1')
             else:
-                os.rename(lastAnswer + lastFile, lastFile)
+                os.rename(lastAnswer + lastFile, feedDir + lastFile)
                 lastAnswer == None
                 tempLastFile = lastFile
                 lastFile == None
                 labelSingleImage(tempLastFile)
     lastFile = file
 
-# go through every file and classify image
-for file in imageFiles:
-    labelSingleImage(file)
+
+
+
+if (len(sys.argv) != 4):
+    print("USAGE: python labelToolTest [feedDir] [peopleDir] [noPeopleDir]")
+else:
+    feedDir = sys.argv[1]
+    peopleDir = sys.argv[2]
+    noPeopleDir = sys.argv[3]
+
+    # read in all png files
+    imageFiles = glob.glob(feedDir + '*.png')
+
+
+
+    # go through every file and classify image
+    for file in imageFiles:
+        labelSingleImage(file)
