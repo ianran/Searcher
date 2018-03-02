@@ -8,10 +8,15 @@
 import numpy as np
 import scipy.ndimage as im
 import matplotlib.pyplot as plt
-import getch
 import glob
 import os
 import sys
+import platform
+
+if platform.system() == 'Windows':
+    from msvcrt import getch
+else:
+    import getch
 
 # The directory to read images from
 feedDir = None
@@ -43,7 +48,7 @@ def labelSingleImage(file):
     # Read in input to move file into correct folder.
     while True:
         # read in character for terminal without return statement
-        x = getch.getch()
+        x = getch()
 
         if x == 'p':
             # there are people, move to the people directory
@@ -67,7 +72,7 @@ def labelSingleImage(file):
             else:
                 # if there is a last file to go back to
                 # move that file back to the feed directory, set last file to be none,
-                # and recursivly call labelSingleImage again on the last file.
+                # and recursively call labelSingleImage again on the last file.
                 os.rename(lastAnswer + lastFile, feedDir + lastFile)
                 lastAnswer = None
                 tempLastFile = lastFile
