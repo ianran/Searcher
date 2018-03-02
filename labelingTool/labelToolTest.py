@@ -48,7 +48,7 @@ def labelSingleImage(file):
     # Read in input to move file into correct folder.
     while True:
         # read in character for terminal without return statement
-        x = getch()
+        x = getch.getch()
 
         if x == 'p':
             # there are people, move to the people directory
