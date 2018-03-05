@@ -17,6 +17,7 @@ fi
 # places into variable name just the single filename without extension
 filename=$1
 name=${filename%.*}
+name=${name##*/}
 echo $name
 #
 # run ffmpeg command
