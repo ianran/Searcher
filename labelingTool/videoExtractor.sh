@@ -6,18 +6,18 @@
 #
 # you can also just copy the last command and replace $1 with the video
 # filename.
-
+#
+#
 # performs check to make sure correct number of arguements passed
-if [ $# -ne 1 ]
-    then
+if [ $# -ne 1 ] ; then
         echo "USAGE: sh videoExtractor [videoFileToExtract]"
         exit -1
 fi
-
+#
 # places into variable name just the single filename without extension
-filename=$1
-name=${filename%.*}
-echo $name
-
+#filename=$1
+#name=${filename%.*}
+#echo $name
+#
 # run ffmpeg command
-ffmpeg -i $1 -r 2 $name-%05d.jpg
+#ffmpeg -i $1 -r 2 $name-%05d.jpg
