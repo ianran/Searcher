@@ -15,9 +15,9 @@ if [ $# -ne 1 ] ; then
 fi
 #
 # places into variable name just the single filename without extension
-#filename=$1
-#name=${filename%.*}
-#echo $name
+filename=$1
+name=${filename%.*}
+echo $name
 #
 # run ffmpeg command
-#ffmpeg -i $1 -r 2 $name-%05d.jpg
+ffmpeg -i $1 -r 2 $name-%05d.jpg
