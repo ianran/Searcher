@@ -42,9 +42,9 @@ def labelSingleImage(file):
 
     # reads in image file and displays image
     image = im.imread(feedDir + file)
+    plt.clf()
     plt.axis('off')
     plt.title(file)
-    plt.clf()
     plt.imshow(image)
     plt.pause(0.05)
 
