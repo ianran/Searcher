@@ -42,6 +42,8 @@ def labelSingleImage(file):
 
     # reads in image file and displays image
     image = im.imread(feedDir + file)
+    plt.axis('off')
+    plt.title(file)
     plt.imshow(image)
     plt.pause(0.05)
 
@@ -108,4 +110,3 @@ for file in imageFiles:
     labelSingleImage(file)
 
 # End for
->>>>>>> 94446a82ae8809396acdc649c51cab0ea622c281
