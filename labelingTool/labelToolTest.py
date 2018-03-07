@@ -35,7 +35,7 @@ lastAnswer = None
 def labelSingleImage(file):
     global lastFile
     global lastAnswer
-    print('p - people, n - no people, f - back (I Fucked up button)')
+    print('p - people, n - no people, f - Fuck up (back)')
 
     # read in just the base file name, removes path data
     file = os.path.basename(file)
@@ -44,6 +44,7 @@ def labelSingleImage(file):
     image = im.imread(feedDir + file)
     plt.axis('off')
     plt.title(file)
+    plt.clf()
     plt.imshow(image)
     plt.pause(0.05)
 
@@ -80,6 +81,8 @@ def labelSingleImage(file):
                 tempLastFile = lastFile
                 lastFile = None
                 labelSingleImage(tempLastFile)
+                plt.imshow(image)
+                plt.pause(0.05)
             # End if
         # End if
     # End while
