@@ -41,7 +41,7 @@ curLabels = reader.readLabelsDict(sys.argv[3])
 with open(sys.argv[3], 'a') as f:
     for p in peopleImageNames:
         if not (os.path.basename(p) in curLabels):
-            f.write(os.path.basename(p) + ', people\n')
+            f.write(os.path.basename(p) + ',people\n')
     for p in noPeopleImageNames:
         if not (os.path.basename(p) in curLabels):
-            f.write(os.path.basename(p) + ', noPeople\n')
+            f.write(os.path.basename(p) + ',noPeople\n')
