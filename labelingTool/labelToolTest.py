@@ -1,3 +1,9 @@
+# labelToolTest.py
+# Written Ian Rankin & Bryce Renck March 2018
+# This labeling tool goes through and given user input,
+# places all of the images in the feed directory in the
+# coresponding people / no people directories.
+#
 # Note needs getch python package
 # https://pypi.python.org/pypi/getch#downloads
 #
@@ -94,13 +100,15 @@ def labelSingleImage(file):
 
 # check if all arguments are given, and output usage if not
 if (len(sys.argv) != 4):
+    # print usage, and exit program
     print("USAGE: python labelToolTest [feedDir] [peopleDir] [noPeopleDir]")
-else:
-    # define input arguments to variables
+    sys.exit()
+#end if
 
-    feedDir = sys.argv[1]
-    peopleDir = sys.argv[2]
-    noPeopleDir = sys.argv[3]
+# define input arguments to variables
+feedDir = sys.argv[1]
+peopleDir = sys.argv[2]
+noPeopleDir = sys.argv[3]
 # End if
 
 # Read in all jpg file names
