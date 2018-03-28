@@ -47,8 +47,9 @@ class App:
     def run(self):
         while True:
             _ret, frame = self.cam.read()
-            frame_gray = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
-            vis = frame.copy()
+            resframe = cv.resize(frame, None, fx=1/4., fy=1/4., interpolation=cv.INTER_AREA)
+            frame_gray = cv.cvtColor(resframe, cv.COLOR_BGR2GRAY)
+            vis = resframe.copy()
 
             if len(self.tracks) > 0:
                 img0, img1 = self.prev_gray, frame_gray
