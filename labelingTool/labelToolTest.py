@@ -41,7 +41,7 @@ lastAnswer = None
 def labelSingleImage(file):
     global lastFile
     global lastAnswer
-    print('p - people, n - no people, f - Fuck up (back)')
+    print('p - people, n - no people, f - Fudge up (back)')
 
     # read in just the base file name, removes path data
     file = os.path.basename(file)
