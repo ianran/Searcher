@@ -8,7 +8,7 @@
 # USAGE (example):
 # import labelReader
 #
-# labelReader.readLabels('labels.csv')
+# labelReader.readLabelsDict('labels.csv')
 
 import csv
 
