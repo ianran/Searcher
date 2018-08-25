@@ -17,12 +17,14 @@
 
 import sys
 # check before importing modules if there is the corect arguments being pased.
-if len(sys.argv) != 3:
-    print('USAGE python FeedImagesToNumpyZip [feedDir] [labels csv]')
+if len(sys.argv) != 3 and len(sys.argv) != 4:
+    print('USAGE python FeedImagesToNumpyZip [feedDir] [labels csv] opt[whiten]')
     sys.exit()
 
 import numpy as np
-import matplotlib.pyplot as im
+#import matplotlib.pyplot as im
+import scipy.ndimage as im
+import scipy.stats as stat
 import labelReader
 
 import glob
@@ -44,27 +46,34 @@ if len(filenames) <= 0:
     print('Error feed directory is empty...')
     sys.exit()
 
-testImage = im.imread(filenames[0])
-s = testImage.shape
-#print(s)
+image = im.imread(filenames[0])
+s = image.shape
+print(s)
 x = np.empty((len(filenames), s[0], s[1], s[2]))
-y = np.empty(len(filenames))
+y = np.zeros((len(filenames), 2))
+print(len(filenames))
 
 for i in range(len(filenames)):
-
+#for i in range(5):
     image = im.imread(filenames[i])
+    if len(sys.argv) == 4:
+        image = stat.zscore(image)
     ##### If any preprocessing is desired, here is a place to do it!
-    x[i] = image
-
+    #x[i] = image
+    if i % 20 == 0:
+        print(i)
     filename = os.path.basename(filenames[i])
     label = labels[filename]
     if label == 'noPeople':
-        y[i] = 0
+        y[i][0] = 1.0
     elif label == 'people':
-        y[i] = 1
+        y[i][1] = 1.0
     else:
         print('Error, the image: '+ filename + 'is not in the labels')
         sys.exit()
 
-#print(x.shape)
+
+#s = input('asd')
+print(x.shape)
+print(y.shape)
 np.savez('output.npz', x = x, y = y)
