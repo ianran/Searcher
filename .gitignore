@@ -8,4 +8,5 @@
 *.mov
 *.MOV
 *.ipynb_checkpoints
+*.npz
 __pycache__
