@@ -7,6 +7,7 @@
 *.PNG
 *.mov
 *.MOV
+feed/
 *.ipynb_checkpoints
 *.npz
 __pycache__
