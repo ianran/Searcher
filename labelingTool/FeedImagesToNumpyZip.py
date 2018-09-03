@@ -25,6 +25,7 @@ import numpy as np
 #import matplotlib.pyplot as im
 import scipy.ndimage as im
 import scipy.stats as stat
+import skimage.transform as misc
 import labelReader
 
 import glob
@@ -46,16 +47,21 @@ if len(filenames) <= 0:
     print('Error feed directory is empty...')
     sys.exit()
 
-image = im.imread(filenames[0])
-s = image.shape
+#image = im.imread(filenames[0])
+#s = image.shape
+s = (405, 720, 3)
 print(s)
 x = np.empty((len(filenames), s[0], s[1], s[2]))
 y = np.zeros((len(filenames), 2))
-print(len(filenames))
+#print(len(filenames))
+s = (405, 720, 3)
 
 for i in range(len(filenames)):
 #for i in range(5):
     image = im.imread(filenames[i])
+    if (image.shape != s):
+        image = misc.resize(image, s)
+
     if len(sys.argv) == 4:
         image = stat.zscore(image)
     ##### If any preprocessing is desired, here is a place to do it!
