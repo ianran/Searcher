@@ -14,7 +14,7 @@
 # y = file['y']
 #
 #
-print('Started running')
+print('Started running', flush=True)
 
 import sys
 # check before importing modules if there is the corect arguments being pased.
@@ -73,7 +73,7 @@ for i in range(len(filenames)):
     ##### If any preprocessing is desired, here is a place to do it!
     #x[i] = image
     if i % 20 == 0:
-        print(i)
+        print(i, flush=True)
     filename = os.path.basename(filenames[i])
     label = labels[filename]
     if label == 'noPeople':
@@ -87,5 +87,5 @@ for i in range(len(filenames)):
 
 #s = input('asd')
 print(x.shape)
-print(y.shape)
+print(y.shape, flush=True)
 np.savez('output.npz', x = x, y = y)

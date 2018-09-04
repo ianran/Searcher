@@ -4,8 +4,8 @@
 #SBATCH --partition normal
 #SBATCH --nodes 1
 #SBATCH --ntasks 1
-#SBATCH --cpus-per-task 16
-#SBATCH --time 0-00:15:00
+#SBATCH --cpus-per-task 24
+#SBATCH --time 0-06:00:00
 #SBATCH --mail-user ianran@nmsu.edu
 #SBATCH --get-user-env
 

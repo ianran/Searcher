@@ -6,7 +6,7 @@
 
 import numpy as np
 import tensorflow as tf
-import matplotlib.pyplot as plt
+#import matplotlib.pyplot as plt
 
 imageShape = (480,720,3)
 print(imageShape)
