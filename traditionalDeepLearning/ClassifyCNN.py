@@ -8,7 +8,7 @@ import numpy as np
 import tensorflow as tf
 #import matplotlib.pyplot as plt
 
-imageShape = (480,720,3)
+imageShape = (405,720,3)
 print(imageShape)
 
 ###########################
@@ -25,8 +25,9 @@ y = tf.placeholder(tf.float32, shape=[None, 2])
 # placeholder for batch norm training phase.
 trainPhase = tf.placeholder(tf.bool)
 
+batchSize = 30
 print(x)
-print(xWhite)
+#print(xWhite)
 print(y)
 
 ########################### Define the batch norm function.
