@@ -262,6 +262,8 @@ for i in range(numIterations):
 
     print(train.shape)
     print(label.shape)
+    print(train.type)
+    print(label.type)
 
     feed = {x: train, y: label, trainPhase: True}
 
