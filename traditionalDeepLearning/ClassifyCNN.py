@@ -217,17 +217,18 @@ accuracy = tf.reduce_mean(tf.cast(equals, tf.float32))
 ############################# Define batch code
 
 file = np.load('/home/ianran/feed.npz')
-x = file['x']
-y = file['y']
+xTrain = file['x']
+yTrain = file['y']
 
-print(x.dtype)
+print(xTrain.dtype)
 
-x = np.astype(np.float32)
+xTrain = xTrain.astype(np.float32)
+yTrain = yTrain.astype(np.float32)
 
-print(x.dtype)
+print(xTrain.dtype)
 
-print(x.shape)
-print(y.shape)
+print(xTrain.shape)
+print(yTrain.shape)
 
 # this function goes through and pulls random
 # parts of the training data out
@@ -237,8 +238,8 @@ print(y.shape)
 # @return - images, labels as numpy arrays
 def pullRandomBatch(batchSize):
     # select random indcies of filenames
-    indicies = np.random.choice(len(y), batchSize, replace=False)
-    return x[indicies], y[indicies]
+    indicies = np.random.choice(len(yTrain), batchSize, replace=False)
+    return xTrain[indicies], yTrain[indicies]
 
 
 
