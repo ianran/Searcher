@@ -220,6 +220,12 @@ file = np.load('/home/ianran/feed.npz')
 x = file['x']
 y = file['y']
 
+print(x.dtype)
+
+x = np.astype(np.float32)
+
+print(x.dtype)
+
 print(x.shape)
 print(y.shape)
 
@@ -262,8 +268,8 @@ for i in range(numIterations):
 
     print(train.shape)
     print(label.shape)
-    print(train.type)
-    print(label.type)
+    print(train.dtype)
+    print(label.dtype)
 
     feed = {x: train, y: label, trainPhase: True}
 
