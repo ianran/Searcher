@@ -220,6 +220,9 @@ file = np.load('/home/ianran/feed.npz')
 x = file['x']
 y = file['y']
 
+print(x.shape)
+print(y.shape)
+
 # this function goes through and pulls random
 # parts of the training data out
 # @param filenames - a list of all possible filenames to pull from
@@ -256,6 +259,10 @@ for i in range(numIterations):
     if i % 5 == 0:
         print('itr: ' + str(i))
     train, label = pullRandomBatch(batchSize)
+
+    print(train.shape)
+    print(label.shape)
+
     feed = {x: train, y: label, trainPhase: True}
 
     lossSum += sess.run(loss, feed_dict=feed)
