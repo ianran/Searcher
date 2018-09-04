@@ -1,0 +1,5 @@
+Started running zip creation
+Loaded module
+/home/ianran/Searcher/labelingTool/FeedImagesToNumpyZip.py
+WHY! RUN...
+slurmstepd: error: *** JOB 387223 ON joker-c5 CANCELLED AT 2018-09-04T00:19:06 ***

@@ -14,12 +14,15 @@
 # y = file['y']
 #
 #
+print('Started running')
 
 import sys
 # check before importing modules if there is the corect arguments being pased.
 if len(sys.argv) != 3 and len(sys.argv) != 4:
     print('USAGE python FeedImagesToNumpyZip [feedDir] [labels csv] opt[whiten]')
     sys.exit()
+
+print('options good')
 
 import numpy as np
 #import matplotlib.pyplot as im
@@ -32,9 +35,12 @@ import glob
 import os
 
 
+print('Just work dangit')
 
 # Set the feed directory to read all images in from
 feedDir = sys.argv[1]
+
+print('work dangit again')
 
 # read in labels csv file
 labels = labelReader.readLabelsDict(sys.argv[2])

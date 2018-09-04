@@ -18,15 +18,4 @@ module load python/351
 #module load tensorflow-dev/1.8.0
 
 echo "Loaded module"
-# start running program
-echo "/home/ianran/Searcher/labelingTool/FeedImagesToNumpyZip.py"
-
-#python /home/ianran/Searcher/labelingTool/FeedImagesToNumpyZip.py /home/ianran/feed/
-
-#sh t.sh
-
-sh run.sh
-
-#python /home/ianran/Searcher/labelingTool/FeedImagesToNumpyZip.py /home/ianran/feed/ /home/ianran/Searcher/labelingTool/labels.csv 1
-
-echo "Finished running program"
+python /home/ianran/Searcher/labelingTool/print.py
