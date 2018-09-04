@@ -222,7 +222,7 @@ y = file['y']
 
 print(x.dtype)
 
-x = np.astype(np.float32)
+x.astype(np.float32)
 
 print(x.dtype)
 
