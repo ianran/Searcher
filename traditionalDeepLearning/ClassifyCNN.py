@@ -245,7 +245,7 @@ print(yTrain.shape)
 def pullRandomBatch(batchSize):
     # select random indcies of filenames
     indicies = np.random.choice(len(yTrain), batchSize, replace=False)
-    print(indicies)
+    #print(indicies)
     return xTrain[indicies], yTrain[indicies]
 
 
@@ -274,13 +274,13 @@ for i in range(numIterations):
         print('itr: ' + str(i))
     train, label = pullRandomBatch(batchSize)
 
-    print(train.shape)
-    print(label.shape)
-    print(train.dtype)
-    print(label.dtype)
+    #print(train.shape)
+    #print(label.shape)
+    #print(train.dtype)
+    #print(label.dtype)
 
-    print(train[0])
-    print(label[0])
+    #print(train[0])
+    #print(label[0])
 
     feed = {x: train, y: label, trainPhase: True}
 
@@ -294,6 +294,9 @@ for i in range(numIterations):
 
     if i % numToValidate == 0:
         feed = {x: xValid, y: yValid, trainPhase: False}
+
+        print(xValid)
+        print(yValid)
 
         acc = sess.run(accuracy, feed_dict=feed)
         print('iteration num: ' + str(i))
