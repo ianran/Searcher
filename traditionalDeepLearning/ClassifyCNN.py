@@ -245,6 +245,7 @@ print(yTrain.shape)
 def pullRandomBatch(batchSize):
     # select random indcies of filenames
     indicies = np.random.choice(len(yTrain), batchSize, replace=False)
+    print(indcies)
     return xTrain[indicies], yTrain[indicies]
 
 
@@ -277,6 +278,9 @@ for i in range(numIterations):
     print(label.shape)
     print(train.dtype)
     print(label.dtype)
+
+    print(train[0])
+    print(label[0])
 
     feed = {x: train, y: label, trainPhase: True}
 
