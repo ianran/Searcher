@@ -190,7 +190,7 @@ variables = variables + [outputMat, outputBias]
 saver = tf.train.Saver(variables)
 
 # define loss function
-crossEntropy = tf.nn.softmax_cross_entropy_with_logits(labels=y, logits=outputLogit)
+crossEntropy = tf.nn.softmax_cross_entropy_with_logits_v2(labels=y, logits=outputLogit)
 loss = tf.reduce_mean(crossEntropy)
 
 
@@ -245,7 +245,7 @@ print(yTrain.shape)
 def pullRandomBatch(batchSize):
     # select random indcies of filenames
     indicies = np.random.choice(len(yTrain), batchSize, replace=False)
-    print(indcies)
+    print(indicies)
     return xTrain[indicies], yTrain[indicies]
 
 
