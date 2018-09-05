@@ -53,6 +53,7 @@ if len(filenames) <= 0:
     print('Error feed directory is empty...')
     sys.exit()
 
+#filenames = filenames[0:5]
 #image = im.imread(filenames[0])
 #s = image.shape
 s = (405, 720, 3)
@@ -65,13 +66,20 @@ s = (405, 720, 3)
 for i in range(len(filenames)):
 #for i in range(5):
     image = im.imread(filenames[i])
+    #print(image)
     if (image.shape != s):
         image = misc.resize(image, s)
 
+    #print('yo')
+    #print(image)
+
     if len(sys.argv) == 4:
         image = stat.zscore(image)
+
+    #print('whitened')
+    #print(image)
     ##### If any preprocessing is desired, here is a place to do it!
-    #x[i] = image
+    x[i] = image
     if i % 20 == 0:
         print(i, flush=True)
     filename = os.path.basename(filenames[i])
@@ -88,4 +96,8 @@ for i in range(len(filenames)):
 #s = input('asd')
 print(x.shape)
 print(y.shape, flush=True)
+
+#print(x)
+#print(y)
+
 np.savez('output.npz', x = x, y = y)
