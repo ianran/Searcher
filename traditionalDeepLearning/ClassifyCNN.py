@@ -25,7 +25,7 @@ y = tf.placeholder(tf.float32, shape=[None, 2])
 # placeholder for batch norm training phase.
 trainPhase = tf.placeholder(tf.bool)
 
-batchSize = 30
+batchSize = 5
 print(x)
 #print(xWhite)
 print(y)
@@ -78,8 +78,8 @@ def batchNormLayer(x, numChannels, num, filtType='conv'):
 
 numConvLayers = 0
 # Define variable initilization
-normInit = tf.truncated_normal_initializer(0,.05, dtype=tf.float32)
-zeroInit = tf.constant_initializer(0.05, dtype=tf.float32)
+normInit = tf.truncated_normal_initializer(0, .05, dtype=tf.float32)
+zeroInit = tf.constant_initializer(0.0, dtype=tf.float32)
 
 # convLayer
 # define convolutional layer with batch normalization, and max pooling
@@ -184,6 +184,9 @@ outputLogit = tf.matmul(full2, outputMat) + outputBias
 print(outputLogit)
 variables = variables + [outputMat, outputBias]
 
+print(variables[0])
+print(variables[5])
+
 ############################ init saver and loss function
 
 # init tensorflow saver
@@ -216,7 +219,8 @@ accuracy = tf.reduce_mean(tf.cast(equals, tf.float32))
 
 ############################# Define batch code
 
-file = np.load('/home/ianran/feed.npz')
+#file = np.load('/home/ianran/feed.npz')
+file = np.load('output.npz')
 xTrain = file['x']
 yTrain = file['y']
 
@@ -225,11 +229,13 @@ print(xTrain.dtype)
 xTrain = xTrain.astype(np.float32)
 yTrain = yTrain.astype(np.float32)
 
-xValid = xTrain[0:50]
-yValid = yTrain[0:50]
+#xValid = xTrain[0:50]
+#yValid = yTrain[0:50]
+xValid = xTrain
+yValid = yTrain
 
-xTrain = xTrain[50:len(xTrain)]
-yTrain = yTrain[50:len(yTrain)]
+#xTrain = xTrain[50:len(xTrain)]
+#yTrain = yTrain[50:len(yTrain)]
 
 print(xTrain.dtype)
 
@@ -295,13 +301,20 @@ for i in range(numIterations):
     if i % numToValidate == 0:
         feed = {x: xValid, y: yValid, trainPhase: False}
 
-        print(xValid)
-        print(yValid)
+        #print(xValid)
+        #print(yValid)
 
+        outputs = sess.run(outputLogit, feed_dict=feed)
         acc = sess.run(accuracy, feed_dict=feed)
         print('iteration num: ' + str(i))
         print('Validation accuracy = ' + str(acc))
         print('Avg loss = ' + str(lossSum / numToValidate))
+        print('variables[0] output (3,3,32)')
+        print(sess.run(variables[0]))
+        print('bias')
+        print(sess.run(variables[1]))
+        print('outputs')
+        print(outputs)
         lossSum = 0.0
 
 saveName = 'modelV2'
