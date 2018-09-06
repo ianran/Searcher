@@ -201,7 +201,7 @@ loss = tf.reduce_mean(crossEntropy)
 
 ######## define training step
 
-learningRate = 0.001
+learningRate = 0.005
 
 optimizer = tf.train.AdamOptimizer(learning_rate=learningRate)
 trainStep = optimizer.minimize(loss)
@@ -229,13 +229,13 @@ print(xTrain.dtype)
 xTrain = xTrain.astype(np.float32)
 yTrain = yTrain.astype(np.float32)
 
-#xValid = xTrain[0:50]
-#yValid = yTrain[0:50]
-xValid = xTrain
-yValid = yTrain
+xValid = xTrain[0:50]
+yValid = yTrain[0:50]
+#xValid = xTrain
+#yValid = yTrain
 
-#xTrain = xTrain[50:len(xTrain)]
-#yTrain = yTrain[50:len(yTrain)]
+xTrain = xTrain[50:len(xTrain)]
+yTrain = yTrain[50:len(yTrain)]
 
 print(xTrain.dtype)
 
