@@ -25,7 +25,7 @@ y = tf.placeholder(tf.float32, shape=[None, 2])
 # placeholder for batch norm training phase.
 trainPhase = tf.placeholder(tf.bool)
 
-batchSize = 5
+batchSize = 30
 print(x)
 #print(xWhite)
 print(y)
@@ -219,8 +219,8 @@ accuracy = tf.reduce_mean(tf.cast(equals, tf.float32))
 
 ############################# Define batch code
 
-#file = np.load('/home/ianran/feed.npz')
-file = np.load('output.npz')
+file = np.load('/home/ianran/feed.npz')
+#file = np.load('output.npz')
 xTrain = file['x']
 yTrain = file['y']
 
@@ -229,13 +229,13 @@ print(xTrain.dtype)
 xTrain = xTrain.astype(np.float32)
 yTrain = yTrain.astype(np.float32)
 
-#xValid = xTrain[0:50]
-#yValid = yTrain[0:50]
-xValid = xTrain
-yValid = yTrain
+xValid = xTrain[0:50]
+yValid = yTrain[0:50]
+#xValid = xTrain
+#yValid = yTrain
 
-#xTrain = xTrain[50:len(xTrain)]
-#yTrain = yTrain[50:len(yTrain)]
+xTrain = xTrain[50:len(xTrain)]
+yTrain = yTrain[50:len(yTrain)]
 
 print(xTrain.dtype)
 
