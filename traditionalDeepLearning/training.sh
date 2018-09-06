@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --job-name trad_training
-#SBATCH --output trad_training.out
+#SBATCH --job-name trad2
+#SBATCH --output stuff.out
 #SBATCH --partition gpu
 #SBATCH --nodes 1
 #SBATCH --ntasks 1
