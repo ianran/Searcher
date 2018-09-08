@@ -10,4 +10,6 @@
 feed/
 *.ipynb_checkpoints
 *.npz
+*.tar.gz
+*.out
 __pycache__
