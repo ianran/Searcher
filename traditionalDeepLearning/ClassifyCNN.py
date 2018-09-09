@@ -169,9 +169,9 @@ sh = layer6.shape
 flattened = tf.reshape(layer6, shape=[-1, sh[1]*sh[2]*sh[3]])
 print(flattened)
 
-full1, tmp = fullConnLayer(flattened, 1024)
-variables += tmp
-print(full1)
+#full1, tmp = fullConnLayer(flattened, 1024)
+#variables += tmp
+#print(full1)
 
 full2, tmp = fullConnLayer(flattened, 1024)
 variables += tmp
