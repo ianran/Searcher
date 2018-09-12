@@ -192,7 +192,7 @@ sess = tf.Session()
 
 sess.run(tf.global_variables_initializer())
 
-numEpochs = 1000
+numEpochs = 10000
 numDisc = 5
 numBatch = 50
 
