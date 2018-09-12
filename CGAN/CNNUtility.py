@@ -97,7 +97,7 @@ def convLayer(x, filterShape, poolShape, trainPhase):
 # @param outputShape - the shape of the output image (height width)
 #
 # @return layer, list of all variables
-def transposeConvLayer(x, filterShape, outShape, trainPhase):
+def transposeConvLayer(x, filterShape, outShape, strides, trainPhase):
     global numLayers
     inputChannels = x.shape[3]
     convFilt = tf.get_variable('filt' + str(numLayers), \
@@ -107,9 +107,10 @@ def transposeConvLayer(x, filterShape, outShape, trainPhase):
         [filterShape[2]], initializer=zeroInit)
 
     # setup layer conv, batch norm, and pooling layers.
+    print(x.shape[0])
     logit = tf.nn.conv2d_transpose(x, convFilt,\
-        output_shape=[-1,outShape[0],outShape[1], filterShape[2]],\
-        strides=[1,1,1,1], padding='SAME') + bias
+        output_shape=[tf.shape(x)[0],outShape[0],outShape[1], filterShape[2]],\
+        strides=strides, padding='SAME') + bias
     normed, gamma, beta, mean, variance = \
         batchNormLayer(logit, filterShape[2], numLayers, trainPhase)
     layer = tf.nn.relu(normed)

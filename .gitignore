@@ -12,4 +12,5 @@ feed/
 *.npz
 *.tar.gz
 *.out
+*.gz
 __pycache__
