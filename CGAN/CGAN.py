@@ -222,11 +222,11 @@ def saveImage(file, img):
     validImage = np.resize(img, (28,28))
     mis.imsave(file, validImage)
 
-saveImage('img/valid0.jpg', validImages[0])
-saveImage('img/valid1.jpg', validImages[1])
-saveImage('img/valid2.jpg', validImages[2])
-saveImage('img/valid55.jpg', validImages[55])
-saveImage('img/valid600.jpg', validImages[600])
+saveImage('scratch/ianran/img/valid0.jpg', validImages[0])
+saveImage('scratch/ianran/img/valid1.jpg', validImages[1])
+saveImage('scratch/ianran/img/valid2.jpg', validImages[2])
+saveImage('scratch/ianran/img/valid55.jpg', validImages[55])
+saveImage('scratch/ianran/img/valid600.jpg', validImages[600])
 
 for i in range(numEpochs):
     print('epoch = ' + str(i))
@@ -245,7 +245,7 @@ for i in range(numEpochs):
 
         if (j == 0 and i % 25 == 0):
             # save a synth image a few times.
-            saveImage('img/synthImage'+str(i)+'.jpg', synthImages[0])
+            saveImage('/scratch/ianran/img/synthImage'+str(i)+'.jpg', synthImages[0])
 
         # append synth images with real images.
         realImages, realLabels = getNextBatch(numBatch//2)
