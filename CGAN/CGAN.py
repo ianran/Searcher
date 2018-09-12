@@ -32,9 +32,10 @@
 import numpy as np
 import tensorflow as tf
 import CNNUtility as cnn
+import scipy.misc as mis
 
 # image shape for MNIST
-imageShape = (30, 30, 1)
+imageShape = (28, 28, 1)
 print(imageShape)
 
 # random vector input
@@ -42,7 +43,7 @@ z = tf.placeholder(tf.float32, shape=[None, 32])
 trainPhaseGen = tf.placeholder(tf.bool)
 trainPhaseDis = tf.placeholder(tf.bool)
 
-x = tf.placeholder(tf.float32, shape=[None, 30, 30, 1])
+x = tf.placeholder(tf.float32, shape=[None, 28, 28, 1])
 y = tf.placeholder(tf.float32, shape=[None, 11])
 disInputGen = tf.placeholder(tf.bool)
 
@@ -52,21 +53,21 @@ genTrainableVars = []
 genOtherVars = []
 with tf.variable_scope('generative'):
     # fully connected networks
-    fc1, trainableVars, otherVars = cnn.fullConnLayer(z, 200,trainPhaseGen)
+    fc1, trainableVars, otherVars = cnn.fullConnLayer(z, 400,trainPhaseGen)
     genTrainableVars += trainableVars
     genOtherVars += otherVars
 
-    fc2, trainableVars, otherVars = cnn.fullConnLayer(fc1, 400,trainPhaseGen)
+    fc2, trainableVars, otherVars = cnn.fullConnLayer(fc1, 784,trainPhaseGen)
     genTrainableVars += trainableVars
     genOtherVars += otherVars
 
     ###################################### Re-shape vector to image.
     # reshaped to small image with many layers.
-    reShapedImage = tf.reshape(fc2, shape=(-1, 5, 5, 16))
+    reShapedImage = tf.reshape(fc2, shape=(-1, 7, 7, 16))
     print(reShapedImage)
 
     genImg1, trainableVars, otherVars = cnn.transposeConvLayer(reShapedImage, \
-        [5,5,64], [10,10], [1,2,2,1], trainPhaseGen)
+        [5,5,64], [14,14], [1,2,2,1], trainPhaseGen)
     genTrainableVars += trainableVars
     genOtherVars += otherVars
 
@@ -82,7 +83,7 @@ with tf.variable_scope('generative'):
     #print(genImg2)
 
     genImg3, trainableVars, otherVars = cnn.transposeConvLayer(genImg1, \
-        [5,5,32], [30,30], [1,3,3,1], trainPhaseGen)
+        [5,5,32], [28,28], [1,2,2,1], trainPhaseGen)
     genTrainableVars += trainableVars
     genOtherVars += otherVars
 
@@ -101,7 +102,7 @@ with tf.variable_scope('generative'):
     genTrainableVars += [convFilt, bias]
 
     logitGen = tf.nn.conv2d(genImg3, convFilt, strides=[1,1,1,1], padding='SAME') + bias
-    outputGen = tf.nn.relu(logitGen)
+    outputGen = tf.nn.sigmoid(logitGen)
     print(outputGen)
 
 
@@ -117,12 +118,12 @@ with tf.variable_scope('discrimitive'):
     disTrainableVars += trainableVars
     disOtherVars += otherVars
 
-    disImg2, trainableVars, otherVars = cnn.convLayer(disImg1 , [5,5,16], [3,3], trainPhaseDis)
+    disImg2, trainableVars, otherVars = cnn.convLayer(disImg1 , [5,5,16], [2,2], trainPhaseDis)
     disTrainableVars += trainableVars
     disOtherVars += otherVars
 
     ################################## Flattened discrimatve
-    flattenedDis = tf.reshape(disImg2, shape=[-1, 400])
+    flattenedDis = tf.reshape(disImg2, shape=[-1, 784])
 
     fc1, trainableVars, otherVars = cnn.fullConnLayer(flattenedDis, 100, trainPhaseDis)
     disTrainableVars += trainableVars
@@ -175,7 +176,7 @@ print(data.train.labels[25])
 def getNextBatch(batchSize):
     miniBatchImg, miniBatchLabels = data.train.next_batch(batchSize)
 
-    resizedImages = np.resize(miniBatchImg, (batchSize,30,30,1))
+    resizedImages = np.resize(miniBatchImg, (batchSize,28,28,1))
 
     # create one hot vector
     oneHot = np.zeros((batchSize, 11), np.float32)
@@ -203,7 +204,7 @@ allSynthLabels[:,10] = 1.0
 #
 validFeed = {trainPhaseGen: False, trainPhaseDis: False, disInputGen: False}
 print(data.validation.images.shape)
-validImages = np.resize(data.validation.images, [5000,30,30,1])
+validImages = np.resize(data.validation.images, [5000,28,28,1])
 print(validImages.shape)
 validFeed[x] = validImages
 validLabels = np.zeros((data.validation.labels.shape[0], 11))
@@ -214,7 +215,18 @@ validFeed[z] = np.zeros((5000,32))
 
 feedGenTrain = {trainPhaseGen: True, trainPhaseDis: False, disInputGen: True}
 feedGenTrain[y] = allSynthLabels
-feedGenTrain[x] = np.zeros((50,30,30,1))
+feedGenTrain[x] = np.zeros((50,28,28,1))
+
+###### function to save images given 1,30,30,1 shape
+def saveImage(file, img):
+    validImage = np.resize(img, (28,28))
+    mis.imsave(file, validImage)
+
+saveImage('img/valid0.jpg', validImages[0])
+saveImage('img/valid1.jpg', validImages[1])
+saveImage('img/valid2.jpg', validImages[2])
+saveImage('img/valid55.jpg', validImages[55])
+saveImage('img/valid600.jpg', validImages[600])
 
 for i in range(numEpochs):
     print('epoch = ' + str(i))
@@ -230,6 +242,10 @@ for i in range(numEpochs):
         synthImages = sess.run(outputGen, feed_dict=feedGen)
         synthLabels = np.zeros((numBatch//2,11), np.float32)
         synthLabels[:,10] = 1.0
+
+        if (j == 0 and i % 25 == 0):
+            # save a synth image a few times.
+            saveImage('img/synthImage'+str(i)+'.jpg', synthImages[0])
 
         # append synth images with real images.
         realImages, realLabels = getNextBatch(numBatch//2)
