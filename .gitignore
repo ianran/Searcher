@@ -13,4 +13,5 @@ feed/
 *.tar.gz
 *.out
 *.gz
+*.pyc
 __pycache__
