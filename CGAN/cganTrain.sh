@@ -17,7 +17,7 @@
 
 echo "Loading modules"
 # load needed modules
-module load python/351
+module load python-dev/361
 module load tensorflow-dev/1.8.0
 
 echo "Starting execution of program."

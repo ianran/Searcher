@@ -32,7 +32,7 @@
 import numpy as np
 import tensorflow as tf
 import CNNUtility as cnn
-#import scipy.misc as mis
+import scipy.misc as mis
 
 # image shape for MNIST
 imageShape = (28, 28, 1)
@@ -218,15 +218,15 @@ feedGenTrain[y] = allSynthLabels
 feedGenTrain[x] = np.zeros((50,28,28,1))
 
 ###### function to save images given 1,30,30,1 shape
-#def saveImage(file, img):
-#    validImage = np.resize(img, (28,28))
-#    mis.imsave(file, validImage)
+def saveImage(file, img):
+    validImage = np.resize(img, (28,28))
+    mis.imsave(file, validImage)
 
-#saveImage('scratch/ianran/img/valid0.jpg', validImages[0])
-#saveImage('scratch/ianran/img/valid1.jpg', validImages[1])
-#saveImage('scratch/ianran/img/valid2.jpg', validImages[2])
-#saveImage('scratch/ianran/img/valid55.jpg', validImages[55])
-#saveImage('scratch/ianran/img/valid600.jpg', validImages[600])
+saveImage('scratch/ianran/img/valid0.jpg', validImages[0])
+saveImage('scratch/ianran/img/valid1.jpg', validImages[1])
+saveImage('scratch/ianran/img/valid2.jpg', validImages[2])
+saveImage('scratch/ianran/img/valid55.jpg', validImages[55])
+saveImage('scratch/ianran/img/valid600.jpg', validImages[600])
 
 for i in range(numEpochs):
     print('epoch = ' + str(i))
@@ -243,9 +243,9 @@ for i in range(numEpochs):
         synthLabels = np.zeros((numBatch//2,11), np.float32)
         synthLabels[:,10] = 1.0
 
-        #if (j == 0 and i % 25 == 0):
+        if (j == 0 and i % 25 == 0):
             # save a synth image a few times.
-            #saveImage('/scratch/ianran/img/synthImage'+str(i)+'.jpg', synthImages[0])
+            saveImage('/scratch/ianran/img/synthImage'+str(i)+'.jpg', synthImages[0])
 
 
         # append synth images with real images.
@@ -295,7 +295,7 @@ for i in range(numEpochs):
         acc = sess.run(accuracy, feed_dict=validFeed)
         print('Validation accuracy = ' + str(acc))
 
-saver.save(sess, '../../models/cgan1', global_step=numEpochs)
+saver.save(sess, '../../models/cgan2', global_step=numEpochs)
 
 testImages = np.resize(data.test.images, (-1,28,28,1))
 testLabels = np.zeros((testImages.shape[0], 11))
