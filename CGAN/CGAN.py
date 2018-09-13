@@ -306,7 +306,7 @@ validFeed[y] = testLabels
 acc = sess.run(accuracy, feed_dict=validFeed)
 
 print('test accuracy = ')
-print(ac)
+print(acc)
 
 
 
