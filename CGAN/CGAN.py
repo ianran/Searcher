@@ -33,6 +33,7 @@ import numpy as np
 import tensorflow as tf
 import CNNUtility as cnn
 import scipy.misc as mis
+#import imageio
 
 # image shape for MNIST
 imageShape = (28, 28, 1)
