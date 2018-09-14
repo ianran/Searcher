@@ -132,13 +132,20 @@ with tf.variable_scope('discrimitive'):
     disTrainableVars += trainableVars
     disOtherVars += otherVars
 
-####################### define accuracy functions
+####################### define accuracy, and encode functions
 actualClass = tf.argmax(y, axis=1)
 predictedClass = tf.argmax(outputDis, axis=1)
 equals = tf.equal(actualClass, predictedClass)
 
 # cast integers to float for reduce mean to work correctly.
 accuracy = tf.reduce_mean(tf.cast(equals, tf.float32))
+
+slice = outputGen[0,:,:,:]
+print(slice)
+scaledImage = tf.cast(slice * tf.constant(255.0, dtype=tf.float32), dtype=tf.uint8)
+print(scaledImage)
+encoder = tf.image.encode_jpeg(scaledImage)
+print(encoder)
 
 ####################### define loss and train functions functions
 
