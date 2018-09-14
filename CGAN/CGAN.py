@@ -32,7 +32,7 @@
 import numpy as np
 import tensorflow as tf
 import CNNUtility as cnn
-import scipy.misc as mis
+#import scipy.misc as mis
 #import imageio
 
 # image shape for MNIST
@@ -141,12 +141,12 @@ equals = tf.equal(actualClass, predictedClass)
 # cast integers to float for reduce mean to work correctly.
 accuracy = tf.reduce_mean(tf.cast(equals, tf.float32))
 
-slice = outputGen[0,:,:,:]
-print(slice)
-scaledImage = tf.cast(slice * tf.constant(255.0, dtype=tf.float32), dtype=tf.uint8)
-print(scaledImage)
-encoder = tf.image.encode_jpeg(scaledImage)
-print(encoder)
+#slice = outputGen[0,:,:,:]
+#print(slice)
+#scaledImage = tf.cast(slice * tf.constant(255.0, dtype=tf.float32), dtype=tf.uint8)
+#print(scaledImage)
+#encoder = tf.image.encode_jpeg(scaledImage)
+#print(encoder)
 
 ####################### define loss and train functions functions
 
@@ -226,15 +226,30 @@ feedGenTrain[y] = allSynthLabels
 feedGenTrain[x] = np.zeros((50,28,28,1))
 
 ###### function to save images given 1,30,30,1 shape
-def saveImage(file, img):
-    validImage = np.resize(img, (28,28))
-    mis.imsave(file, validImage)
+#def saveImage(file, img):
+#    validImage = np.resize(img, (28,28))
+#    mis.imsave(file, validImage)
 
-saveImage('scratch/ianran/img/valid0.jpg', validImages[0])
-saveImage('scratch/ianran/img/valid1.jpg', validImages[1])
-saveImage('scratch/ianran/img/valid2.jpg', validImages[2])
-saveImage('scratch/ianran/img/valid55.jpg', validImages[55])
-saveImage('scratch/ianran/img/valid600.jpg', validImages[600])
+def write_jpeg(filepath, data):
+    g = tf.Graph()
+    with g.as_default():
+        data_t = tf.placeholder(tf.float32, shape=[28,28,1])
+        scaledImage = tf.cast(data_t * tf.constant(255.0, dtype=tf.float32), dtype=tf.uint8)
+        op = tf.image.encode_jpeg(scaledImage, format='grayscale', quality=100)
+        init = tf.global_variables_initializer()
+
+    with tf.Session(graph=g) as sess:
+        sess.run(init)
+        data_np = sess.run(op, feed_dict={ data_t: data })
+    print(type(data_np))
+    with open(filepath, 'wb') as fd:
+        fd.write(data_np)
+
+write_jpeg('/scratch/ianran/valid0tf.jpg', validImages[0])
+#saveImage('scratch/ianran/img/valid1.jpg', validImages[1])
+#saveImage('scratch/ianran/img/valid2.jpg', validImages[2])
+#saveImage('scratch/ianran/img/valid55.jpg', validImages[55])
+#saveImage('scratch/ianran/img/valid600.jpg', validImages[600])
 
 for i in range(numEpochs):
     print('epoch = ' + str(i))
@@ -253,7 +268,7 @@ for i in range(numEpochs):
 
         if (j == 0 and i % 25 == 0):
             # save a synth image a few times.
-            saveImage('/scratch/ianran/img/synthImage'+str(i)+'.jpg', synthImages[0])
+            write_jpeg('/scratch/ianran/img/synthImage'+str(i)+'.jpg', synthImages[0])
 
 
         # append synth images with real images.
@@ -316,9 +331,13 @@ acc = sess.run(accuracy, feed_dict=validFeed)
 print('test accuracy = ')
 print(acc)
 
+genTestFeed = {trainPhaseGen: False, trainPhaseDis: False, disInputGen: True}
+randVec = np.random.normal(0.0,1.0,(100,32))
+genTestFeed[z] = randVec
+synthImages = sess.run(outputGen, feed_dict=genTestFeed)
 
-
-
+for i in range(synthImages.shape[0]):
+    write_jpeg('/scratch/ianran/img/testSynth'+str(i)+'.jpg', synthImages[i])
 
 
 
