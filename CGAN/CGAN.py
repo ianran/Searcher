@@ -269,8 +269,8 @@ for i in range(numEpochs):
 
         if (j == 0 and i % 5 == 0):
             # save a synth image a few times.
-            #write_jpeg('/scratch/ianran/img/synthImage'+str(i)+'.jpg', synthImages[0])
-            write_jpeg('img/synthImage'+str(i)+'.jpg', synthImages[0])
+            write_jpeg('/scratch/ianran/img/synthImage'+str(i)+'.jpg', synthImages[0])
+            #write_jpeg('img/synthImage'+str(i)+'.jpg', synthImages[0])
 
 
         # append synth images with real images.
@@ -320,7 +320,7 @@ for i in range(numEpochs):
         acc = sess.run(accuracy, feed_dict=validFeed)
         print('Validation accuracy = ' + str(acc))
 
-saver.save(sess, '../../models/cgan2', global_step=numEpochs)
+saver.save(sess, '../../models/cgan3', global_step=numEpochs)
 
 testImages = np.resize(data.test.images, (-1,28,28,1))
 testLabels = np.zeros((testImages.shape[0], 11))
