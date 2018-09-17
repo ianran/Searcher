@@ -68,7 +68,7 @@ with tf.variable_scope('generative'):
     print(reShapedImage)
 
     genImg1, trainableVars, otherVars = cnn.transposeConvLayer(reShapedImage, \
-        [9,9,64], [14,14], [1,2,2,1], trainPhaseGen)
+        [7,7,64], [14,14], [1,2,2,1], trainPhaseGen)
     genTrainableVars += trainableVars
     genOtherVars += otherVars
 
@@ -95,7 +95,7 @@ with tf.variable_scope('generative'):
     zeroInit = tf.constant_initializer(0.0, dtype=tf.float32)
 
     convFilt = tf.get_variable('finalGenFilt', \
-        [1, 1, genImg3.shape[3], 1], \
+        [3, 3, genImg3.shape[3], 1], \
         initializer=normInit)
     bias = tf.get_variable('finalGenBias', \
         [1], initializer=zeroInit)
@@ -158,11 +158,11 @@ print(loss)
 saver = tf.train.Saver(genTrainableVars + genOtherVars + disTrainableVars + disOtherVars)
 
 # discrimitive optimizer
-discrimatveOptimizer = tf.train.AdamOptimizer(learning_rate=0.005)
+discrimatveOptimizer = tf.train.AdamOptimizer(learning_rate=0.001)
 discTrainStep = discrimatveOptimizer.minimize(loss, var_list=disTrainableVars)
 
 # generative optimizer is the negative of the loss to maximze the loss
-generativeOptimizer = tf.train.AdamOptimizer(learning_rate=0.005)
+generativeOptimizer = tf.train.AdamOptimizer(learning_rate=0.01)
 genTrainStep = generativeOptimizer.minimize(-loss, var_list=genTrainableVars)
 
 
@@ -267,7 +267,7 @@ for i in range(numEpochs):
         synthLabels = np.zeros((numBatch//2,11), np.float32)
         synthLabels[:,10] = 1.0
 
-        if (j == 0 and i % 25 == 0):
+        if (j == 0 and i % 5 == 0):
             # save a synth image a few times.
             #write_jpeg('/scratch/ianran/img/synthImage'+str(i)+'.jpg', synthImages[0])
             write_jpeg('img/synthImage'+str(i)+'.jpg', synthImages[0])
