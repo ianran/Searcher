@@ -68,7 +68,7 @@ with tf.variable_scope('generative'):
     print(reShapedImage)
 
     genImg1, trainableVars, otherVars = cnn.transposeConvLayer(reShapedImage, \
-        [5,5,64], [14,14], [1,2,2,1], trainPhaseGen)
+        [9,9,64], [14,14], [1,2,2,1], trainPhaseGen)
     genTrainableVars += trainableVars
     genOtherVars += otherVars
 
@@ -245,7 +245,8 @@ def write_jpeg(filepath, data):
     with open(filepath, 'wb') as fd:
         fd.write(data_np)
 
-write_jpeg('/scratch/ianran/valid0tf.jpg', validImages[0])
+
+#write_jpeg('/scratch/ianran/valid0tf.jpg', validImages[0])
 #saveImage('scratch/ianran/img/valid1.jpg', validImages[1])
 #saveImage('scratch/ianran/img/valid2.jpg', validImages[2])
 #saveImage('scratch/ianran/img/valid55.jpg', validImages[55])
@@ -268,7 +269,8 @@ for i in range(numEpochs):
 
         if (j == 0 and i % 25 == 0):
             # save a synth image a few times.
-            write_jpeg('/scratch/ianran/img/synthImage'+str(i)+'.jpg', synthImages[0])
+            #write_jpeg('/scratch/ianran/img/synthImage'+str(i)+'.jpg', synthImages[0])
+            write_jpeg('img/synthImage'+str(i)+'.jpg', synthImages[0])
 
 
         # append synth images with real images.
@@ -323,7 +325,7 @@ saver.save(sess, '../../models/cgan2', global_step=numEpochs)
 testImages = np.resize(data.test.images, (-1,28,28,1))
 testLabels = np.zeros((testImages.shape[0], 11))
 for i in range(testImages.shape[0]):
-    testLabels[i][data.test.labels[i]]
+    testLabels[i][data.test.labels[i]] = 1.0
 validFeed[x] = testImages
 validFeed[y] = testLabels
 acc = sess.run(accuracy, feed_dict=validFeed)
