@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name cgan1
+#SBATCH --job-name cganCPU
 #SBATCH --output cganCPU.out
 #SBATCH --partition normal
 #SBATCH --nodes 1
 #SBATCH --ntasks 1
 #SBATCH --cpus-per-task 24
-#SBATCH --time 0-00:15:00
+#SBATCH --time 0-10:0:00
 #SBATCH --mail-user ianran@nmsu.edu
 #SBATCH --mail-type BEGIN
 #SBATCH --mail-type END
