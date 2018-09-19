@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from sklearn import metrics
 from enum import Enum
+from  mpl_toolkits import mplot3d
 
 # Class for RGB segmentation for orange
 class OrangeSegRGB:
@@ -71,7 +72,7 @@ def findTPRandFPR(true, pred):
 
 
 # Input image characteristics
-imgRange = np.arange(1,518) # Will read in images 00496 through 00517
+imgRange = np.arange(1,518) # Will read in images 00001 through 00517
 numImg = 517
 imgSize = (1530, 2720, 3)
 
@@ -99,12 +100,13 @@ labels[345:501] = 0
 labels[501:512] = 1
 labels[512:518] = 0
 
+np.savetxt('Amountian_0002-Labels.csv', labels, delimiter=',')
 
 # Create RGB Segmenter object
 seg = OrangeSegRGB()
 
 # Thresholds
-thres = np.arange(100,401,50)
+thres = np.arange(0,10001,100)
 orange = np.zeros((np.size(thres), numImg))
 
 
@@ -137,22 +139,7 @@ for i in imgRange:
 	n += 1
 
 
-#print(labels)
-#print(orange)
-#print('Incorrect Predictions:')
-#print(np.where(orange != labels))
-#print('')
-
-# Show true labels vs predicted labels
-#print('True labels:')
-#print(labels)
-#print('')
-#print('Predicted labels:')
-#print(orange)
-
-
 # Calculate ROC
-#fpr, tpr, thresholds = metrics.roc_curve(labels,orange)
 tpr = np.zeros(np.size(thres))
 fpr = np.zeros(np.size(thres))
 
@@ -160,12 +147,7 @@ for i in range(np.size(thres)):
 	tpr[i],fpr[i] = findTPRandFPR(labels, orange[i])
 
 
-#print('TPR:')
-#print(tpr)
-#print('')
-#print('FPR:')
-#print(fpr)
-
+# Plot ROC curve
 plt.figure()
 plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve')
 plt.plot([0, 1], [0, 1], color='navy', linestyle='--')
@@ -176,3 +158,10 @@ plt.ylabel('True Positive Rate')
 plt.title('Receiver operating characteristic')
 plt.legend(loc="lower right")
 plt.show()
+
+
+# Plot tpr vs fpr vs threshold
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+
+ax.plot3D(tpr, fpr, thres, c=thres, cmap='Greens')
