@@ -6,6 +6,12 @@
 # The generative network generates fake images, and the discrimitive
 # network tries to discrimnate between fake and real images.
 #
+# Code based vaguly on this paper for generic GAN:
+# http://papers.nips.cc/paper/5423-generative-adversarial-nets.pdf
+# and paper on conditional GAN:
+# https://arxiv.org/pdf/1411.1784.pdf
+#
+#
 # Generative network:
 # G(z) = x     : z - randomly sampled vector.
 #
