@@ -46,6 +46,34 @@ class OrangeHSVSeg:
         out = cv2.cvtColor(input, cv2.COLOR_RGB2HSV)
         return cv2.inRange(out, (hue[0], sat[0], val[0]),  (hue[1], sat[1], val[1]))
 
+
+def ROC(lab, genLab, thresh):
+
+    for i in range(len(thresh)):
+        for f, val in lab.items():
+
+            if val == genLab[f]:
+                print('true')
+            else:
+                print('false')
+
+# End ROC
+
+def isOrange(segIm, thresh):
+
+    count = np.count_nonzero(segIm)
+
+    if count >= thresh:
+        print('orange')
+        return True
+    else:
+        print('false')
+        return False
+    # End if
+
+# End isOrange
+
+
 threshold = np.arange(0, 10001, 10)
 
 # Read in the labels for images
@@ -72,7 +100,7 @@ segPipe = OrangeHSVSeg()
 
 # Read images one at a time and put them through color segmentation.
 for fName in glob.glob('localData/images/*.jpg'):
-  
+
     genLabels[fName] = []
 
     image = mpimage.imread(fName)
@@ -85,42 +113,15 @@ for fName in glob.glob('localData/images/*.jpg'):
     for i in threshold:
 
         # Determine label based on threshold
-        genLabels[fName].append(isOrange(segImage, threshold))
+        genLabels[fName].append(isOrange(segImage, i))
 
     # End for
 
 # End for
 
-
-def isOrange(segIm, thresh):
-
-    count = np.count_nonzero(segIm)
-
-    if count >= thresh:
-        print('orange')
-        return True
-    else:
-        print('false')
-        return False
-    # End if
-
-# End isOrange
-
-def ROC(lab, genLab, thresh):
-
-    for i in range(len(thresh)):
-        for f, val in lab.items():
-
-            if val == genLab[f]:
-                print('true')
-            else:
-                print('false')
-
-# End ROC
-
-
 ROC(labels, genLabels, threshold)
 
+# End isOrange
 
 
 #testyDo = mpimage.imread('localData/images/AMountain_0001-00491.jpg')
