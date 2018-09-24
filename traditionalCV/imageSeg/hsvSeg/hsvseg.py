@@ -49,13 +49,41 @@ class OrangeHSVSeg:
 
 def ROC(lab, genLab, thresh):
 
-    for i in range(len(thresh)):
-        for f, val in lab.items():
+    TPR = np.zeros(len(thresh))
+    FPR = np.zeros(len(thresh))
+    TNR = np.zeros(len(thresh))
+    FNR = np.zeros(len(thresh))
 
-            if val == genLab[f]:
-                print('true')
+    for i in range(len(thresh)):
+
+        TPC = 0.0
+        FPC = 0.0
+        TNC = 0.0
+        FNC = 0.0
+ 
+        for f, val in genLab.items():
+
+            if val[i] == True and lab[f] == True:
+                TPC += 1
+            elif val[i] == True and lab[f] == False:
+                FNC += 1
+            elif val[i] == False and lab[f] == False:
+                TNC += 1
+            elif val[i] == False and lab[f] == True:
+                FPC += 1
             else:
-                print('false')
+                print('problem')
+            # End if
+
+        # End for
+        # print(TPC, FNC, TNC, FPC)
+        # calculate rates
+        TPR[i] = TPC/(TPC + FNC)
+        # FPR[i] = FPC/(FPC + TNC)
+        # TNR[i] = TNC/(FPC + TNC)
+        FNR[i] = FNC/(TPC + FNC)
+
+    return TPR, FPR#, TNR, FNR
 
 # End ROC
 
@@ -64,17 +92,15 @@ def isOrange(segIm, thresh):
     count = np.count_nonzero(segIm)
 
     if count >= thresh:
-        print('orange')
-        return True
+        return(True)
     else:
-        print('false')
-        return False
+        return(False)
     # End if
 
 # End isOrange
 
 
-threshold = np.arange(0, 10001, 10)
+threshold = np.arange(0, 10001, 100)
 
 # Read in the labels for images
 reader = csv.reader(open('localData/labels.csv'))
@@ -92,7 +118,6 @@ for row in reader:
         labels[key] = False
     # End if
 
-
 # End for
 
 # Create system pipeline.
@@ -101,7 +126,11 @@ segPipe = OrangeHSVSeg()
 # Read images one at a time and put them through color segmentation.
 for fName in glob.glob('localData/images/*.jpg'):
 
-    genLabels[fName] = []
+    key = fName.split('/')[2]
+
+    print(key)
+    
+    genLabels[key] = []
 
     image = mpimage.imread(fName)
 
@@ -113,25 +142,15 @@ for fName in glob.glob('localData/images/*.jpg'):
     for i in threshold:
 
         # Determine label based on threshold
-        genLabels[fName].append(isOrange(segImage, i))
+        genLabels[key].append(isOrange(segImage, i))
 
     # End for
 
 # End for
 
-ROC(labels, genLabels, threshold)
+TPR, FPR = ROC(labels, genLabels, threshold)
 
-# End isOrange
+print(TPR, FPR)#, TNR, FNR)
 
-
-#testyDo = mpimage.imread('localData/images/AMountain_0001-00491.jpg')
-
-#thingy = OrangeHSVSeg()
-
-#thingy.process(testyDo)
-
-#segyBoi = thingy.hsv_threshold_output
-
-#plt.imshow(segyBoi, cmap='gray')
-
-#plt.show()
+plt.plot(FPR, TPR)
+plt.show()
