@@ -3,9 +3,11 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
+import labelReader
+import glob
 from sklearn import metrics
 from enum import Enum
-from  mpl_toolkits import mplot3d
+from mpl_toolkits import mplot3d
 
 # Class for RGB segmentation for orange
 class OrangeSegRGB:
@@ -48,77 +50,55 @@ class OrangeSegRGB:
         return cv2.inRange(input, (red[0], green[0], blue[0]),  (red[1], green[1], blue[1]))
 
 
-def findTPRandFPR(true, pred):
-	numLabels = np.size(true)
-	tp = 0.
-	fp = 0.
-	tn = 0.
-	fn = 0.
+def findTPRandFPR(true, pred, numThres):
+	tpr = np.zeros(numThres)
+	fpr = np.zeros(numThres)
+	
+	for i in range(numThres):
+		tp = 0.
+		fp = 0.
+		tn = 0.
+		fn = 0.
 
-	for i in range(numLabels):
-		if true[i] == 1 and pred[i] == 1:
-			tp += 1
-		elif true[i] == 1 and pred[i] == 0:
-			fn += 1
-		elif true[i] == 0 and pred[i] == 1:
-			fp += 1
-		elif true[i] == 0 and pred[i] == 0:
-			tn += 1
+		for fName in pred.keys():
 
-	tpr = tp / (tp + fn)
-	fpr = fp / (fp + tn)
+			if true.get(fName) == 'True' and pred.get(fName)[i] == True:
+				tp += 1
+			elif true.get(fName) == 'True' and pred.get(fName)[i] == False:
+				fn += 1
+			elif true.get(fName) == 'False' and pred.get(fName)[i] == True:
+				fp += 1
+			elif true.get(fName) == 'False' and pred.get(fName)[i] == False:
+				tn += 1
+
+		tpr[i] = tp / (tp + fn)
+		fpr[i] = fp / (fp + tn)
 
 	return tpr, fpr
 
 
+labels = labelReader.readLabelsDict('labels.csv')
+orangeDect = {}
+
 # Input image characteristics
-imgRange = np.arange(1,518) # Will read in images 00001 through 00517
-numImg = 517
 imgSize = (1530, 2720, 3)
 
 img = np.zeros(imgSize)
 segImg = np.zeros((imgSize[0], imgSize[1]))
 
-
-# Labels for images
-# 0 - No orange, 1 - Orange
-labels = np.zeros(numImg)
-labels[0:7] = 1
-labels[7:21] = 0
-labels[21:34] = 1
-labels[34:45] = 0
-labels[45] = 1
-labels[46] = 0
-labels[47] = 1
-labels[48:193] = 0
-labels[193:208] = 1
-labels[208:211] = 0
-labels[211:230] = 1
-labels[230:333] = 0
-labels[333:345] = 1
-labels[345:501] = 0
-labels[501:512] = 1
-labels[512:518] = 0
-
-np.savetxt('Amountian_0002-Labels.csv', labels, delimiter=',')
-
 # Create RGB Segmenter object
 seg = OrangeSegRGB()
 
 # Thresholds
-thres = np.arange(0,10001,100)
-orange = np.zeros((np.size(thres), numImg))
+thres = np.arange(0,5001,10)
 
 
-n = 0
-for i in imgRange:
-	# Read in images
-	if i < 10:
-        	img = mpimg.imread('AMountian_0002-0000' + str(i) + '.jpg')
-	elif i < 100:
-        	img = mpimg.imread('AMountian_0002-000' + str(i) + '.jpg')
-	else:
-        	img = mpimg.imread('AMountian_0002-00' + str(i) + '.jpg')
+# Read images one at a time and put them through color segmentation.
+for fName in glob.glob('*.jpg'):
+
+	orangeDect[fName] = []
+
+	img = mpimg.imread(fName)
 
     	# Segment image
 	seg.process(img)
@@ -132,19 +112,14 @@ for i in imgRange:
 	t = 0
 	for th in thres:
 		if orangePixNum >= th:
-			orange[t,n] = 1
+			orangeDect[fName].append(True)
+		else:
+			orangeDect[fName].append(False)
 
-		t += 1
-
-	n += 1
 
 
 # Calculate ROC
-tpr = np.zeros(np.size(thres))
-fpr = np.zeros(np.size(thres))
-
-for i in range(np.size(thres)):
-	tpr[i],fpr[i] = findTPRandFPR(labels, orange[i])
+tpr,fpr = findTPRandFPR(labels, orangeDect, np.size(thres))
 
 
 # Plot ROC curve
@@ -157,11 +132,15 @@ plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
 plt.title('Receiver operating characteristic')
 plt.legend(loc="lower right")
-plt.show()
+
 
 
 # Plot tpr vs fpr vs threshold
 fig = plt.figure()
-ax = plt.axes(projection='3d')
+ax = fig.add_subplot(111, projection = '3d')
 
-ax.plot3D(tpr, fpr, thres, c=thres, cmap='Greens')
+ax.scatter(tpr[1:21], fpr[1:21], thres[1:21], c='r', marker='o')
+ax.set_xlabel('True Positive Rate')
+ax.set_zlabel('False Positive Rate')
+ax.set_zlabel('Threshold')
+plt.show()
