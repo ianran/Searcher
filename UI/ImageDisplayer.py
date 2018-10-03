@@ -21,22 +21,52 @@ else:
 
 
 class ImageDisplayer:
+    # run
+    # threaded run function for showing images.
     def run(self):
-        print('Hello')
+        while True:
+            image = im.imread(self.files[self.idx])
+            plt.clf()
+            plt.axis('off')
+            plt.title(self.files[self.idx])
+            print('trying to show image')
+            plt.imshow(image)
+            print('Should have shown image')
+            plt.pause(0.05)
+
+            char = 'p'
+            while not(char == 's' or char == 'w' or char == 'q'):
+                char = getch.getch()
+                print(char)
+            print('Yo')
+            if char == 's':
+                if self.idx > 0:
+                    self.idx -= 1
+            elif char =='w':
+                if self.idx >= len(self.files):
+                    self.idx += 1
+            else:
+                return
 
     def __init__(self):
+        self.idx = 0
         self.files = []
         self.running = False
 
-        self.thread = threading.Thread(target=self.run, args=(self))
+        self.thread = threading.Thread(target=self.run)#, args=[self])
 
+    # addImgFiles
+    # adds image files, and starts the thread if it is the first image file added image.
+    # @param newFiles
     def addImgFiles(self, newFiles):
-        self.files.append(newFiles)
-        if not self.running:
-            self.thread.start()
+        if len(newFiles) > 0:
+            self.files.extend(newFiles)
+            if not self.running:
+                self.thread.start()
 
 
 
 display = ImageDisplayer()
 time.sleep(1)
-display.addImgFiles([])
+display.addImgFiles(['../data/grace_hopper.jpg'])
+time.sleep(40)
