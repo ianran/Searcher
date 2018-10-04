@@ -3,8 +3,10 @@ import numpy as np
 import math
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-import labelReader
 import glob
+import sys
+sys.path.append('../../../labelingTool/')
+import labelReader
 from sklearn import metrics
 from enum import Enum
 from mpl_toolkits import mplot3d
@@ -105,8 +107,20 @@ def findTPRandFPR(true, pred, numThres):
 	return tpr, fpr
 
 
+# check if all arguments are given, and output usage if not
+if (len(sys.argv) != 3):
+	# print usage, and exit program
+	print("USAGE: python orangeRGBseg [imgDir] [csvFile]")
+	sys.exit()
+#end if
+
+# define input arguments to variables
+imgDir = sys.argv[1]
+csvFile = sys.argv[2]
+
+
 # Read in image labels
-labels = labelReader.readLabelsDict('labels.csv')
+labels = labelReader.readLabelsDict(csvFile)
 
 
 # Initialize dict for predicted labels
@@ -132,9 +146,10 @@ prog1  = ProgressBar()
 
 
 # Read images one at a time and put them through color segmentation.
-for fName in prog1(glob.glob('./dataset/*/*.jpg')):
+for fName in prog1(glob.glob(imgDir + '*/*.jpg')):
 	# Key for label dict is image name
-	key = fName.split('/')[3]
+	fNameSplit = fName.split('/')
+	key = fNameSplit[len(fNameSplit)-1]
 
 	orangeDect[key] = []
 
