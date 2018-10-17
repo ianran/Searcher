@@ -4,7 +4,6 @@ import math
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import glob
-import shutil
 import sys
 sys.path.append('../../../labelingTool/')
 import labelReader
@@ -57,65 +56,67 @@ class OrangeSegRGB:
 		return cv2.inRange(input, (red[0], green[0], blue[0]),  (red[1], green[1], blue[1]))
 
 
-# Function to calculate True Positive and False Positive Rate by counting number of true positives,
+# Function calculate True Positive and False Positive Rate by counting number of true positives,
 # false positives, true negatives, and false negatives
 # Input:
 #	true -- Dictionary with true labels
 #	pred -- Dictionary with predicted labels
+#	numThres -- Number of threshold values sweeped over for predicted labels
 # Output:
 #	tpr -- Array with true positive rates for thresholds
 # 	fpr -- Array with false positive rates for thresholds
-def findTPRandFPR(true, pred):
+def findTPRandFPR(true, pred, numThres):
 	# Create progress bar for finding rates
 	print('TPR and FPR progress:')
 	prog2 = ProgressBar()
 	
 	# Initialize rate arrays
-	tpr = 0.
-	fpr = 0.
+	tpr = np.zeros(numThres)
+	fpr = np.zeros(numThres)
 	
-	tp = 0.
-	fp = 0.
-	tn = 0.
-	fn = 0.
-	
-	# Go through each image's labels
-	for fName in prog2(pred.keys()):
+	# Sweep through thresholds
+	for i in prog2(range(numThres)):
+		# Initialize outcome counts
+		tp = 0.
+		fp = 0.
+		tn = 0.
+		fn = 0.
 
-		# True positive
-		if true.get(fName) == 'people' and pred.get(fName) == True:
-			tp += 1
-		# False negative
-		elif true.get(fName) == 'people' and pred.get(fName) == False:
-			fn += 1
-		# False positive
-		elif true.get(fName) == 'noPeople' and pred.get(fName) == True:
-			fp += 1
-		# True negative
-		elif true.get(fName) == 'noPeople' and pred.get(fName) == False:
-			tn += 1
+		# Go through each image's labels
+		for fName in pred.keys():
 
-	# Calculate true positive rate
-	tpr = tp / (tp + fn)
+			# True positive
+			if true.get(fName) == 'people' and pred.get(fName)[i] == True:
+				tp += 1
+			# False negative
+			elif true.get(fName) == 'people' and pred.get(fName)[i] == False:
+				fn += 1
+			# False positive
+			elif true.get(fName) == 'noPeople' and pred.get(fName)[i] == True:
+				fp += 1
+			# True negative
+			elif true.get(fName) == 'noPeople' and pred.get(fName)[i] == False:
+				tn += 1
 
-	# Calculate false positive rate
-	fpr = fp / (fp + tn)
+		# Calculate true positive rate
+		tpr[i] = tp / (tp + fn)
+
+		# Calculate false positive rate
+		fpr[i] = fp / (fp + tn)
 
 	return tpr, fpr
 
 
 # check if all arguments are given, and output usage if not
-if (len(sys.argv) != 4):
+if (len(sys.argv) != 3):
 	# print usage, and exit program
-	print("USAGE: python orangeRGBseg [imgDir] [csvFile] [predOrange]")
+	print("USAGE: python orangeRGBseg [imgDir] [csvFile]")
 	sys.exit()
 #end if
-
 
 # define input arguments to variables
 imgDir = sys.argv[1]
 csvFile = sys.argv[2]
-predDir = sys.argv[3]
 
 
 # Read in image labels
@@ -136,9 +137,8 @@ segImg = np.zeros((imgSize[0], imgSize[1]))
 seg = OrangeSegRGB()
 print('Segmentation progress:')
 
-
-# Threshold
-thres = 50
+# Thresholds
+thres = np.arange(0,2001,10)
 
 
 # Create progress bar for image segmentation
@@ -163,19 +163,43 @@ for fName in prog1(glob.glob(imgDir + '*/*.jpg')):
    	# Determine number of orange pixels segmented
 	orangePixNum = np.count_nonzero(segImg)
 
-	# Label as True and copy image to directory containing predicted orange pictures
-	if orangePixNum >= thres:
-		orangeDect[key] = True
-		shutil.copyfile(fName, predDir + key)
-	# Label as False
-	else:
-		orangeDect[key] = False
+	# Run image through all thresholds
+	t = 0
+	for th in thres:
+		# Label as True
+		if orangePixNum >= th:
+			orangeDect[key].append(True)
+		# Label as False
+		else:
+			orangeDect[key].append(False)
 
 
-# Calculate True Positive Rate and False Positive Rate
-tpr,fpr = findTPRandFPR(labels, orangeDect)
+# Calculate ROC
+tpr,fpr = findTPRandFPR(labels, orangeDect, np.size(thres))
 
-print('')
-print('TPR = ', tpr)
-print('FPR = ', fpr)
-print('')
+print(tpr[1], fpr[1], thres[1])
+
+# Plot ROC curve
+plt.figure()
+plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve', marker='o')
+plt.plot([0, 1], [0, 1], color='navy', linestyle='--')
+plt.xlim([0.0, 1.0])
+plt.xticks(np.arange(0,1.1,0.05))
+plt.ylim([0.0, 1.05])
+plt.yticks(np.arange(0,1.1,0.05))
+plt.grid()
+plt.xlabel('False Positive Rate')
+plt.ylabel('True Positive Rate')
+plt.title('Receiver operating characteristic')
+plt.legend(loc="lower right")
+
+
+
+# Plot tpr vs fpr vs threshold
+fig = plt.figure()
+ax = fig.add_subplot(111, projection = '3d')
+ax.scatter(tpr[1:21], fpr[1:21], thres[1:21], c='r', marker='o')
+ax.set_xlabel('True Positive Rate')
+ax.set_zlabel('False Positive Rate')
+ax.set_zlabel('Threshold')
+plt.show()
