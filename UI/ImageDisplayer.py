@@ -104,9 +104,3 @@ class ImageDisplayer:
             self.files.extend(newFiles)
             if not self.running:
                 self.thread.start()
-
-
-# # example usage
-display = ImageDisplayer()
-files = glob.glob('../labelingTool/feed/*.jpg')
-display.addImgFiles(files)
