@@ -8,10 +8,8 @@
 #
 # # example usage
 # display = ImageDisplayer()
-# time.sleep(1)
 # files = glob.glob('../labelingTool/feed/*.jpg')
 # display.addImgFiles(files)
-# time.sleep(40)
 #
 # TODO: add method to show GPS coordinate along with file.
 
@@ -43,7 +41,7 @@ class ImageDisplayer:
         photo = ImageTk.PhotoImage(image)
 
         # Create label with image.
-        label = tk.Label(root, image=photo)
+        label = tk.Label(root, image=photo, text="Place GPS Coordinates here.", compound=tk.BOTTOM)
         label.image = photo
         label.pack()
 
@@ -58,7 +56,7 @@ class ImageDisplayer:
             photo = ImageTk.PhotoImage(im)
 
             # configure the label for updating graphics
-            label.configure(image=photo)
+            label.configure(image=photo, text="Place GPS coordinates here i = " + str(self.idx))
             label.image=im
 
             # update graphics
@@ -106,3 +104,9 @@ class ImageDisplayer:
             self.files.extend(newFiles)
             if not self.running:
                 self.thread.start()
+
+
+# # example usage
+display = ImageDisplayer()
+files = glob.glob('../labelingTool/feed/*.jpg')
+display.addImgFiles(files)
