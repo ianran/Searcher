@@ -6,6 +6,13 @@
 # another thread to allow new images to still be processed in the main
 # thread of execution
 #
+# # example usage
+# display = ImageDisplayer()
+# time.sleep(1)
+# files = glob.glob('../labelingTool/feed/*.jpg')
+# display.addImgFiles(files)
+# time.sleep(40)
+#
 # TODO: add method to show GPS coordinate along with file.
 
 import threading
@@ -27,63 +34,69 @@ else:
 class ImageDisplayer:
     # run
     # threaded run function for showing images.
+    # Should not be called directly.
     def run(self):
+        # create tkinter root and open an image.
         root = tk.Tk()
-        image = Image.open(self.files[self.idx]) #im.imread(self.files[self.idx])
+        image = Image.open(self.files[self.idx])
         image.thumbnail(self.displaySize)
         photo = ImageTk.PhotoImage(image)
 
-        #canv = tk.Canvas(root, width=80, height=80, bg='white')
-        #canv.create_image(80,80,image=imageLabel)
+        # Create label with image.
         label = tk.Label(root, image=photo)
         label.image = photo
-        #The Pack geometry manager packs widgets in rows or columns.
-        #label.pack(side = "bottom", fill = "both", expand = "yes")
         label.pack()
 
+        # update the display
         root.update_idletasks()
         root.update()
-        #root.mainloop()
 
         while True:
-            im = Image.open(self.files[self.idx]) #im.imread(self.files[self.idx])
+            # Open new image
+            im = Image.open(self.files[self.idx])
             im.thumbnail(self.displaySize)
             photo = ImageTk.PhotoImage(im)
-            #plt.clf()
-            #plt.axis('off')
-            #plt.title(self.files[self.idx])
-            print('trying to show image')
-            print(self.files[self.idx])
-            #plt.imshow(image)
-            #image.show()
+
+            # configure the label for updating graphics
             label.configure(image=photo)
             label.image=im
+
+            # update graphics
             root.update_idletasks()
             root.update()
-            print('Should have shown image')
-            #plt.pause(0.05)
 
+            ########### Handle reading keyboard input.
             char = 'p'
+            # if a bad character, wait until a good character is given before doing anything.
             while not(char == 's' or char == 'w' or char == 'q'):
                 char = getch.getch()
-                print(char)
-            print('Yo')
+
             if char == 's':
                 if self.idx > 0:
                     self.idx -= 1
+                else:
+                    print('Out of images going backwards.')
             elif char =='w':
-                if self.idx < len(self.files):
+                if self.idx < len(self.files)-1:
                     self.idx += 1
+                else:
+                    print('No more images processed so far.')
             else:
                 return
 
+    # inits the object.
     def __init__(self):
         self.idx = 0
         self.files = []
         self.running = False
+        # Change display size by modifying these settings.
         self.displaySize = (544,306)
 
         self.thread = threading.Thread(target=self.run)#, args=[self])
+        print('Press w to feed forward through images.')
+        print('Press s to go back through images.')
+        print('Press q to quit thread')
+
 
     # addImgFiles
     # adds image files, and starts the thread if it is the first image file added image.
@@ -93,12 +106,3 @@ class ImageDisplayer:
             self.files.extend(newFiles)
             if not self.running:
                 self.thread.start()
-                #self.run()
-
-
-
-display = ImageDisplayer()
-time.sleep(1)
-files = glob.glob('../labelingTool/feed/*.jpg')
-display.addImgFiles(files)
-time.sleep(40)
