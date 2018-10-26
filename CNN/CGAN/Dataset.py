@@ -1,0 +1,85 @@
+# Dataset.py
+# Written Ian Rankin October 2018
+#
+# Read in the dataset
+
+import tensorflow as tf
+import numpy as np
+
+
+
+####################### Other utility
+
+# write_jpeg
+# Write a jpeg using tensorflow, the code should work on joker.
+# @param filepath - filepath of the image to write to.
+# @param data - the image data used to to try ot write using (numpy array)
+# @param imageShape - the shape of the image to be outputed.
+def write_jpeg(filepath, data, imageShape):
+    g = tf.Graph()
+    with g.as_default():
+        data_t = tf.placeholder(tf.float32, shape=[imageShape[0], imageShape[1], imageShape[2]])
+        scaledImage = tf.cast(data_t * tf.constant(255.0, dtype=tf.float32), dtype=tf.uint8)
+        op = tf.image.encode_jpeg(scaledImage, format='rgb', quality=100)
+        init = tf.global_variables_initializer()
+
+    with tf.Session(graph=g) as sess:
+        sess.run(init)
+        data_np = sess.run(op, feed_dict={ data_t: data })
+    print(type(data_np))
+    with open(filepath, 'wb') as fd:
+        fd.write(data_np)
+
+
+
+########################### Read in training data.
+
+# readData
+# this function will read in the required data, and output
+# numpy arrays of training data, and validation data.
+#
+# return    trainImages
+#           trainLabels
+#           validImages
+#           validLabels
+def readData():
+    fileTrain = np.load('train.npz')
+    fileValid = np.load('valid.npz')
+
+    trainImages = fileTrain['x']
+    trainLabels = fileTrain['y']
+
+    validImages = fileValid['x']
+    validLabels = fileValid['y']
+
+    print(trainImages.shape)
+    print(validImages.shape)
+
+    #write_jpeg('test.jpg', trainImages[0], (405,720,3))
+    #write_jpeg('test14.jpg', trainImages[14], (405,720,3))
+    #write_jpeg('test16.jpg', trainImages[16], (405,720,3))
+    #print(trainLabels)
+    return trainImages, trainLabels, validImages, validLabels
+
+
+
+########################### define batch functions
+
+def getNextBatch(images, labels, batchSize):
+    numOutputClasses = 3
+    indicies = np.random.choice(len(yTrain), batchSize, replace=False)
+
+    miniBatchLabels = labels[indicies]
+
+
+
+    # create one hot vector
+    oneHot = np.zeros((batchSize, numOutputClasses), np.float32)
+    for i in range(batchSize):
+        oneHot[i][miniBatchLabels[i]] = 1.0
+
+    return images[indicies], oneHot
+
+
+# Test code
+#readData()

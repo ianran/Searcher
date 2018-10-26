@@ -53,13 +53,13 @@ if len(filenames) <= 0:
     print('Error feed directory is empty...')
     sys.exit()
 
-filenames = filenames[0:50]
+#filenames = filenames[0:50]
 #image = im.imread(filenames[0])
 #s = image.shape
 s = (405, 720, 3)
 print(s)
 x = np.empty((len(filenames), s[0], s[1], s[2]))
-y = np.zeros((len(filenames), 2))
+y = np.zeros((len(filenames), 3))
 #print(len(filenames))
 s = (405, 720, 3)
 
