@@ -23,6 +23,6 @@ module load tensorflow-dev/1.8.0
 echo "Starting execution of program."
 # start running program
 
-python -u ~/Searcher/CGAN/CGANRealData.py
+python -u ~/Searcher/CNN/CGAN/CGANRealData.py
 
 echo "Completed execution"
