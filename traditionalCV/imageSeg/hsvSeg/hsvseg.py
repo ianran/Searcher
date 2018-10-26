@@ -6,6 +6,9 @@ from matplotlib import image as mpimage
 from matplotlib import pyplot as plt
 import glob
 import csv
+from progressbar import ProgressBar
+import sys
+import shutil
 
 class OrangeHSVSeg:
     """
@@ -49,41 +52,39 @@ class OrangeHSVSeg:
 
 def ROC(lab, genLab, thresh):
 
-    TPR = np.zeros(len(thresh))
-    FPR = np.zeros(len(thresh))
-    TNR = np.zeros(len(thresh))
-    FNR = np.zeros(len(thresh))
+    TPR = 0
+    TNR = 0
+    FPR = 0
+    FNR = 0
 
-    for i in range(len(thresh)):
-
-        TPC = 0.0
-        FPC = 0.0
-        TNC = 0.0
-        FNC = 0.0
+    TPC = 0.0
+    FPC = 0.0
+    TNC = 0.0
+    FNC = 0.0
  
-        for f, val in genLab.items():
+    for i, val in genLab.items():
 
-            if val[i] == True and lab[f] == True:
-                TPC += 1
-            elif val[i] == True and lab[f] == False:
-                FNC += 1
-            elif val[i] == False and lab[f] == False:
-                TNC += 1
-            elif val[i] == False and lab[f] == True:
-                FPC += 1
-            else:
-                print('problem')
-            # End if
+        if val == True and lab[i] == True:
+            TPC += 1
+        elif val == True and lab[i] == False:
+            FPC += 1
+        elif val == False and lab[i] == False:
+            TNC += 1
+        elif val == False and lab[i] == True:
+            FNC += 1
+        else:
+            print('problem')
+        # End if
 
-        # End for
-        # print(TPC, FNC, TNC, FPC)
-        # calculate rates
-        TPR[i] = TPC/(TPC + FNC)
-        # FPR[i] = FPC/(FPC + TNC)
-        # TNR[i] = TNC/(FPC + TNC)
-        FNR[i] = FNC/(TPC + FNC)
+    # End for
 
-    return TPR, FPR#, TNR, FNR
+    # calculate rates
+    TPR = TPC/(TPC + FNC)
+    FPR = FPC/(FPC + TNC)
+    TNR = TNC/(FPC + TNC)
+    FNR = FNC/(TPC + FNC)
+
+    return TPR, FPR, TNR, FNR
 
 # End ROC
 
@@ -99,11 +100,21 @@ def isOrange(segIm, thresh):
 
 # End isOrange
 
+if len(sys.argv) != 4:
 
-threshold = np.arange(0, 10001, 100)
+    print("Usage: python hsvSeg [imgDir] [csvFile] [pedictedOrangeDirectory]")
+    sys.exit()
+
+# End if
+
+imgDir = sys.argv[1]
+csvFile = sys.argv[2]
+predDir = sys.argv[3]
+
+threshold = 15
 
 # Read in the labels for images
-reader = csv.reader(open('localData/labels.csv'))
+reader = csv.reader(open(csvFile))
 
 labels = {}
 genLabels = {}
@@ -123,12 +134,13 @@ for row in reader:
 # Create system pipeline.
 segPipe = OrangeHSVSeg()
 
+pBar = ProgressBar()
+
 # Read images one at a time and put them through color segmentation.
-for fName in glob.glob('localData/images/*.jpg'):
+for fName in pBar(glob.glob(imgDir + "**/*.jpg")):
 
-    key = fName.split('/')[2]
-
-    print(key)
+    splitDir = fName.split('/')
+    key = splitDir[len(splitDir) - 1]
     
     genLabels[key] = []
 
@@ -138,19 +150,20 @@ for fName in glob.glob('localData/images/*.jpg'):
     segPipe.process(image)
     segImage = segPipe.hsv_threshold_output
     
-    # For each image, cycle through thresholds.
-    for i in threshold:
+    # Determine label based on threshold
+    genLabels[key] = isOrange(segImage, threshold)
 
-        # Determine label based on threshold
-        genLabels[key].append(isOrange(segImage, i))
+    if genLabels[key] == True:
 
-    # End for
+        shutil.copyfile(fName, predDir + key)
+
+    # End if
 
 # End for
 
-TPR, FPR = ROC(labels, genLabels, threshold)
+TPR, FPR, TNR, FNR = ROC(labels, genLabels, threshold)
 
-print(TPR, FPR)#, TNR, FNR)
-
-plt.plot(FPR, TPR)
-plt.show()
+print("TPR: ", TPR)
+print("FPR: ", FPR)
+print("TNR: ", TNR)
+print("FNR: ", FNR)

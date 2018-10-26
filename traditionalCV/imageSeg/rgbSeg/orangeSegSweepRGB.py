@@ -7,7 +7,6 @@ import glob
 import sys
 sys.path.append('../../../labelingTool/')
 import labelReader
-from sklearn import metrics
 from enum import Enum
 from mpl_toolkits import mplot3d
 from progressbar import ProgressBar
@@ -110,7 +109,7 @@ def findTPRandFPR(true, pred, numThres):
 # check if all arguments are given, and output usage if not
 if (len(sys.argv) != 3):
 	# print usage, and exit program
-	print("USAGE: python orangeRGBseg [imgDir] [csvFile]")
+	print("USAGE: python orangeSegSweepRGB [imgDir] [csvFile]")
 	sys.exit()
 #end if
 
@@ -138,7 +137,7 @@ seg = OrangeSegRGB()
 print('Segmentation progress:')
 
 # Thresholds
-thres = np.arange(0,2001,10)
+thres = np.arange(0,1001,10)
 
 
 # Create progress bar for image segmentation
@@ -146,7 +145,7 @@ prog1  = ProgressBar()
 
 
 # Read images one at a time and put them through color segmentation.
-for fName in prog1(glob.glob(imgDir + '*/*.jpg')):
+for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
 	# Key for label dict is image name
 	fNameSplit = fName.split('/')
 	key = fNameSplit[len(fNameSplit)-1]
