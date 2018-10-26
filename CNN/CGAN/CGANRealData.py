@@ -67,6 +67,7 @@ equals = tf.equal(actualClass, predictedClass)
 
 # cast integers to float for reduce mean to work correctly.
 accuracy = tf.reduce_mean(tf.cast(equals, tf.float32))
+correct = tf.reduce_sum(tf.cast(equals, tf.float32))
 
 ####################### define loss and train functions functions
 
@@ -89,7 +90,7 @@ genTrainStep = generativeOptimizer.minimize(-loss, var_list=genTrainableVars)
 ########################### Read in training data.
 
 # read in data
-trainImagesFull, trainLabelsFull, validImages, validLabelsFull \
+trainImagesFull, trainLabelsFull, validImagesFull, validLabelsFull \
         = dt.readData()
 
 
@@ -108,18 +109,33 @@ allSynthLabels[:,numOutputClasses-1] = 1.0
 
 # Validation network
 # realImages -> discrimative network -> accuracy(with real labels)
+# @param labels - all of the labels to validate using
+# @param images - all of the images to validate using
 #
-validFeed = {trainPhaseGen: False, trainPhaseDis: False, disInputGen: False}
-#validImages = np.resize(data.validation.images, [5000, imageShape[0], imageShape[1], imageShape[2]])
-print(validImages.shape)
-validFeed[x] = validImages
-#validLabels = np.zeros((validLabelsFull.shape[0], numOutputClasses))
-#for i in range(validLabelsFull.shape[0]):
-#    validLabels[i][validLabelsFull[i]] = 1.0
+# @return - accuracy of dataset.
+def validate(labels, images, sess):
+    validFeed = {trainPhaseGen: False, trainPhaseDis: False, disInputGen: False}
+    validFeed[z] = np.zeros((validImages.shape[0],randomVecSize))
+    numValidBatches = len(validLabelsFull) // batchSize
+    extraData = len(validLabelsFull) % batchSize
 
-validFeed[y] = validLabelsFull
-validFeed[z] = np.zeros((validImages.shape[0],randomVecSize))
+    correctlyIdent = 0
+    for j in range(numValidBatches):
+        validFeed[x] = validImagesFull[j*numBatch:(j+1)*numBatch]
+        validFeed[y] = validLabelsFull[j*numBatch:(j+1)*numBatch]
 
+        correctlyIdent += sess.run(accuracy, feed_dict=validFeed)
+
+    # extra data from max number of batches to finish off validation check
+    if (extraData > 0):
+        validFeed[x] = validImagesFull[numValidBatches*numBatch:len(validLabelsFull)]
+        validFeed[y] = validLabelsFull[j*numBatch:(j+1)*numBatch]
+
+        correctlyIdent += correctlyIdent += sess.run(accuracy, feed_dict=validFeed)
+
+    return correctlyIdent / len(validLabelsFull)
+
+###### generative network training
 feedGenTrain = {trainPhaseGen: True, trainPhaseDis: False, disInputGen: True}
 feedGenTrain[y] = allSynthLabels
 feedGenTrain[x] = np.zeros((numBatch, imageShape[0], imageShape[1], imageShape[2]))
@@ -191,29 +207,29 @@ for i in range(numEpochs):
 
     ######### validate network
     if (i % 50 == 0 or i == (numEpochs - 1)):
-        acc = sess.run(accuracy, feed_dict=validFeed)
-        print('Validation accuracy = ' + str(acc))
+        print('Validation accuracy = ' + \
+            str(validate(validLabelsFull, validImagesFull, sess)))
 
 
 ####################### After training.
 saver.save(sess, '../../models/cgan4', global_step=numEpochs)
 
 
-validFeed[x] = validImages
-validFeed[y] = validLabels
-acc = sess.run(accuracy, feed_dict=validFeed)
+
+acc = validate(validLabelsFull, validImagesFull, sess)
 
 print('test accuracy = ')
 print(acc)
 
+print('generating synthesized images')
 genTestFeed = {trainPhaseGen: False, trainPhaseDis: False, disInputGen: True}
 randVec = np.random.normal(0.0,1.0,(100,randomVecSize))
 genTestFeed[z] = randVec
 synthImages = sess.run(outputGen, feed_dict=genTestFeed)
 
 for i in range(synthImages.shape[0]):
-    print('bob')
-    #write_jpeg('/scratch/ianran/img/testSynth'+str(i)+'.jpg', synthImages[i])
+    #print('bob')
+    write_jpeg('/scratch/ianran/img/testSynthReal'+str(i)+'.jpg', synthImages[i])
 
 
 
