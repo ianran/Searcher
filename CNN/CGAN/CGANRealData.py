@@ -113,27 +113,27 @@ allSynthLabels[:,numOutputClasses-1] = 1.0
 # @param images - all of the images to validate using
 #
 # @return - accuracy of dataset.
-def validate(labels, images, sess):
+def validate(labels, images, batchSize, sess):
     validFeed = {trainPhaseGen: False, trainPhaseDis: False, disInputGen: False}
-    validFeed[z] = np.zeros((validImages.shape[0],randomVecSize))
-    numValidBatches = len(validLabelsFull) // batchSize
-    extraData = len(validLabelsFull) % batchSize
+    validFeed[z] = np.zeros((labels.shape[0],randomVecSize))
+    numValidBatches = len(labels) // batchSize
+    extraData = len(labels) % batchSize
 
     correctlyIdent = 0
     for j in range(numValidBatches):
-        validFeed[x] = validImagesFull[j*numBatch:(j+1)*numBatch]
-        validFeed[y] = validLabelsFull[j*numBatch:(j+1)*numBatch]
+        validFeed[x] = images[j*numBatch:(j+1)*numBatch]
+        validFeed[y] = labels[j*numBatch:(j+1)*numBatch]
 
         correctlyIdent += sess.run(accuracy, feed_dict=validFeed)
 
     # extra data from max number of batches to finish off validation check
     if (extraData > 0):
-        validFeed[x] = validImagesFull[numValidBatches*numBatch:len(validLabelsFull)]
-        validFeed[y] = validLabelsFull[j*numBatch:(j+1)*numBatch]
+        validFeed[x] = images[numValidBatches*numBatch:len(validLabelsFull)]
+        validFeed[y] = labels[j*numBatch:(j+1)*numBatch]
 
         correctlyIdent += sess.run(accuracy, feed_dict=validFeed)
 
-    return correctlyIdent / len(validLabelsFull)
+    return correctlyIdent / len(labels)
 
 ###### generative network training
 feedGenTrain = {trainPhaseGen: True, trainPhaseDis: False, disInputGen: True}
@@ -208,7 +208,7 @@ for i in range(numEpochs):
     ######### validate network
     if (i % 50 == 0 or i == (numEpochs - 1)):
         print('Validation accuracy = ' + \
-            str(validate(validLabelsFull, validImagesFull, sess)))
+            str(validate(validLabelsFull, validImagesFull, numBatch, sess)))
 
 
 ####################### After training.
@@ -216,7 +216,7 @@ saver.save(sess, '../../models/cgan4', global_step=numEpochs)
 
 
 
-acc = validate(validLabelsFull, validImagesFull, sess)
+acc = validate(validLabelsFull, validImagesFull, numBatch, sess)
 
 print('test accuracy = ')
 print(acc)
