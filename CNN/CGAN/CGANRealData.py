@@ -101,7 +101,7 @@ sess.run(tf.global_variables_initializer())
 
 numEpochs = 10000
 numDisc = 5
-numBatch = 50
+numBatch = 25
 
 allSynthLabels = np.zeros((numBatch, numOutputClasses), np.float32)
 allSynthLabels[:,numOutputClasses-1] = 1.0
@@ -112,7 +112,7 @@ allSynthLabels[:,numOutputClasses-1] = 1.0
 validFeed = {trainPhaseGen: False, trainPhaseDis: False, disInputGen: False}
 #validImages = np.resize(data.validation.images, [5000, imageShape[0], imageShape[1], imageShape[2]])
 print(validImages.shape)
-#validFeed[x] = validImages
+validFeed[x] = validImages
 #validLabels = np.zeros((validLabelsFull.shape[0], numOutputClasses))
 #for i in range(validLabelsFull.shape[0]):
 #    validLabels[i][validLabelsFull[i]] = 1.0

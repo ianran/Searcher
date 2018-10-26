@@ -82,7 +82,7 @@ def generativeNetwork():
         print(genImg3)
         # (135, 240)
         genImg4, trainableVars, otherVars = cnn.transposeConvLayer(genImg3, \
-            [11,11,32], [405,720], [1,3,3,1], trainPhaseGen)
+            [11,11,16], [405,720], [1,3,3,1], trainPhaseGen)
         genTrainableVars += trainableVars
         genOtherVars += otherVars
 
@@ -134,7 +134,7 @@ def discrimativeNetwork(outputGen):
         # (405,720)
         print('Discrimitive network')
         print(disInput)
-        disImg1, trainableVars, otherVars = cnn.convLayer(disInput, [5,5,64], [3,3], trainPhaseDis)
+        disImg1, trainableVars, otherVars = cnn.convLayer(disInput, [5,5,16], [3,3], trainPhaseDis)
         disTrainableVars += trainableVars
         disOtherVars += otherVars
 

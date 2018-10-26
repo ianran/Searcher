@@ -1,5 +1,7 @@
 echo "WHY! RUN..."
 
-python FeedImagesToNumpyZip.py ../../feed/ labels 1
+#python FeedImagesToNumpyZip.py /scratch/ianran/validFeed/ labels.csv
+python FeedImagesToNumpyZip.py ../../feed/ labels.csv
+
 
 
