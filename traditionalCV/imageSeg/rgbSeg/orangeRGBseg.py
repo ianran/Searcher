@@ -8,7 +8,6 @@ import shutil
 import sys
 sys.path.append('../../../labelingTool/')
 import labelReader
-from sklearn import metrics
 from enum import Enum
 from mpl_toolkits import mplot3d
 from progressbar import ProgressBar
@@ -138,7 +137,7 @@ print('Segmentation progress:')
 
 
 # Threshold
-thres = 50
+thres = 20
 
 
 # Create progress bar for image segmentation
@@ -146,7 +145,7 @@ prog1  = ProgressBar()
 
 
 # Read images one at a time and put them through color segmentation.
-for fName in prog1(glob.glob(imgDir + '*/*.jpg')):
+for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
 	# Key for label dict is image name
 	fNameSplit = fName.split('/')
 	key = fNameSplit[len(fNameSplit)-1]
