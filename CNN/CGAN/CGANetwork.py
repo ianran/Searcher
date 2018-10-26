@@ -57,6 +57,7 @@ def generativeNetwork():
         ###################################### Re-shape vector to image.
         # reshaped to small image with many layers.
         reShapedImage = tf.reshape(fc2, shape=(-1, 5, 9, 32))
+        print('GenerativeNetwork network')
         print(reShapedImage)
 
         genImg1, trainableVars, otherVars = cnn.transposeConvLayer(reShapedImage, \
@@ -64,18 +65,21 @@ def generativeNetwork():
         genTrainableVars += trainableVars
         genOtherVars += otherVars
 
+        print(genImg1)
         # (15, 27)
         genImg2, trainableVars, otherVars = cnn.transposeConvLayer(genImg1, \
             [11,11,128], [45,80], [1,3,3,1], trainPhaseGen)
         genTrainableVars += trainableVars
         genOtherVars += otherVars
 
+        print(genImg2)
         # (45, 80)
         genImg3, trainableVars, otherVars = cnn.transposeConvLayer(genImg2, \
             [11,11,128], [135,240], [1,3,3,1], trainPhaseGen)
         genTrainableVars += trainableVars
         genOtherVars += otherVars
 
+        print(genImg3)
         # (135, 240)
         genImg4, trainableVars, otherVars = cnn.transposeConvLayer(genImg3, \
             [11,11,128], [405,720], [1,3,3,1], trainPhaseGen)
@@ -83,7 +87,7 @@ def generativeNetwork():
         genOtherVars += otherVars
 
         # (405, 720)
-
+        print(genImg4)
 
 
         normInit = tf.truncated_normal_initializer(0, .05, dtype=tf.float32)
@@ -128,34 +132,47 @@ def discrimativeNetwork(outputGen):
     with tf.variable_scope('discrimitive'):
         # convolutional
         # (405,720)
+        print('Discrimitive network')
+        print(disInput)
         disImg1, trainableVars, otherVars = cnn.convLayer(disInput, [5,5,64], [3,3], trainPhaseDis)
         disTrainableVars += trainableVars
         disOtherVars += otherVars
+
+        print(disImg1)
 
         # (135,240)
         disImg2, trainableVars, otherVars = cnn.convLayer(disImg1, [5,5,64], [3,3], trainPhaseDis)
         disTrainableVars += trainableVars
         disOtherVars += otherVars
 
+        print(disImg2)
+
         # (45, 80)
         disImg3, trainableVars, otherVars = cnn.convLayer(disImg2, [7,7,128], [3,3], trainPhaseDis)
         disTrainableVars += trainableVars
         disOtherVars += otherVars
 
+        print(disImg3)
+
         # (15, 27)
-        disImg4, trainableVars, otherVars = cnn.convLayer(disImg3, [5,5,128], [3,3], trainPhaseDis)
+        disImg4, trainableVars, otherVars = cnn.convLayer(disImg3, [5,5,32], [3,3], trainPhaseDis)
         disTrainableVars += trainableVars
         disOtherVars += otherVars
+
+        print(disImg4)
 
         # (5, 9)
-        disImg5, trainableVars, otherVars = cnn.convLayer(disImg4, [5,5,32], [3,3], trainPhaseDis)
-        disTrainableVars += trainableVars
-        disOtherVars += otherVars
+        #disImg5, trainableVars, otherVars = cnn.convLayer(disImg4, [5,5,32], [3,3], trainPhaseDis)
+        #disTrainableVars += trainableVars
+        #disOtherVars += otherVars
 
         # (1440)
+        #print(disImg5)
 
         ################################## Flattened discrimatve
-        flattenedDis = tf.reshape(disImg5, shape=[-1, 1440])
+        flattenedDis = tf.reshape(disImg4, shape=[-1, 1440])
+
+        print(flattenedDis)
 
         fc1, trainableVars, otherVars = cnn.fullConnLayer(flattenedDis, 720, trainPhaseDis)
         disTrainableVars += trainableVars
