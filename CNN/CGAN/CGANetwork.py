@@ -82,7 +82,7 @@ def generativeNetwork():
         print(genImg3)
         # (135, 240)
         genImg4, trainableVars, otherVars = cnn.transposeConvLayer(genImg3, \
-            [11,11,128], [405,720], [1,3,3,1], trainPhaseGen)
+            [11,11,32], [405,720], [1,3,3,1], trainPhaseGen)
         genTrainableVars += trainableVars
         genOtherVars += otherVars
 
