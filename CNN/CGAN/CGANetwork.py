@@ -94,7 +94,7 @@ def generativeNetwork():
         zeroInit = tf.constant_initializer(0.0, dtype=tf.float32)
 
         convFilt = tf.get_variable('finalGenFilt', \
-            [3, 3, genImg3.shape[3], 3], \
+            [3, 3, genImg4.shape[3], 3], \
             initializer=normInit)
         bias = tf.get_variable('finalGenBias', \
             [3], initializer=zeroInit)
