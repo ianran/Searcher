@@ -67,18 +67,18 @@ def readData():
 
 def getNextBatch(images, labels, batchSize):
     numOutputClasses = 3
-    indicies = np.random.choice(len(yTrain), batchSize, replace=False)
+    indicies = np.random.choice(len(images), batchSize, replace=False)
 
     miniBatchLabels = labels[indicies]
 
 
 
     # create one hot vector
-    oneHot = np.zeros((batchSize, numOutputClasses), np.float32)
-    for i in range(batchSize):
-        oneHot[i][miniBatchLabels[i]] = 1.0
+    #oneHot = np.zeros((batchSize, numOutputClasses), np.float32)
+    #for i in range(batchSize):
+    #    oneHot[i][miniBatchLabels[i]] = 1.0
 
-    return images[indicies], oneHot
+    return images[indicies], miniBatchLabels
 
 
 # Test code
