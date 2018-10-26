@@ -144,7 +144,7 @@ for i in range(numEpochs):
         if (j == 0 and i % 5 == 0):
             # save a synth image a few times.
             #write_jpeg('/scratch/ianran/img/synthImage'+str(i)+'.jpg', synthImages[0])
-            dt.write_jpeg('img/synthImage'+str(i)+'.jpg', synthImages[0])
+            dt.write_jpeg('img/synthImage'+str(i)+'.jpg', synthImages[0], imageShape)
 
 
         # append synth images with real images.
