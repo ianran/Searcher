@@ -131,7 +131,7 @@ def validate(labels, images, sess):
         validFeed[x] = validImagesFull[numValidBatches*numBatch:len(validLabelsFull)]
         validFeed[y] = validLabelsFull[j*numBatch:(j+1)*numBatch]
 
-        correctlyIdent += correctlyIdent += sess.run(accuracy, feed_dict=validFeed)
+        correctlyIdent += sess.run(accuracy, feed_dict=validFeed)
 
     return correctlyIdent / len(validLabelsFull)
 
