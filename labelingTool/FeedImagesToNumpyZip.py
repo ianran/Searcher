@@ -59,7 +59,7 @@ if len(filenames) <= 0:
 s = (405, 720, 3)
 print(s)
 x = np.empty((len(filenames), s[0], s[1], s[2]))
-y = np.zeros((len(filenames), 3))
+y = np.zeros((len(filenames), 2))
 #print(len(filenames))
 s = (405, 720, 3)
 
