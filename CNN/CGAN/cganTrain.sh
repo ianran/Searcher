@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name cgan1
-#SBATCH --output cgan1.out
+#SBATCH --output cgan2.out
 #SBATCH --partition gpu
 #SBATCH --nodes 1
 #SBATCH --ntasks 1
