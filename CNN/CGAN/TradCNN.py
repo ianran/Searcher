@@ -120,7 +120,7 @@ def testNetwork(labels, images, batchSize, sess):
 
       predictedLabels[numValidBatches*numBatch:len(labels)] = sess.run(correct, feed_dict=validFeed)
 
-
+   labelsClass = np.empty(len(labels), dtype=np.int32)
    labelsClass = np.argmax(labels, axis=1)
    # create confusion matrix
    confMat = np.zeros(labels.shape[1])
