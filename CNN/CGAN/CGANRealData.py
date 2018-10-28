@@ -162,23 +162,10 @@ for i in range(numEpochs):
             #write_jpeg('/scratch/ianran/img/synthImage'+str(i)+'.jpg', synthImages[0])
             dt.write_jpeg('img/synthImage'+str(i)+'.jpg', synthImages[0], imageShape)
 
-
         # append synth images with real images.
         realImages, realLabels = dt.getNextBatch(trainImagesFull, trainLabelsFull, numBatch//2)
-
-        #print('real images')
-        #print(realImages.shape)
-        #print('synth images')
-        #print(synthImages.shape)
-        #print('real labels')
-        #print(realLabels.shape)
-        #print('synth labels')
-        #print(synthLabels.shape)
-
         trainImages = np.append(synthImages, realImages, 0)
         trainLabels = np.append(synthLabels, realLabels, 0)
-
-        #print(trainImages.shape)
 
         ######### set the training phases and input to the discrimater.
         #
@@ -192,7 +179,6 @@ for i in range(numEpochs):
         #print('About to train Discrimitive network')
         sess.run(discTrainStep, feed_dict=feed)
         #print('Trainged disc network')
-
     ################# train generative network
     # set training phase to generative network, and the input of discrimative network
     # to be the generative network
@@ -205,14 +191,14 @@ for i in range(numEpochs):
     # train generative network
     sess.run(genTrainStep, feed_dict=feedGenTrain)
 
-    ######### validate network
+    ######### validate network and save model
     if (i % 50 == 0 or i == (numEpochs - 1)):
         print('Validation accuracy = ' + \
             str(validate(validLabelsFull, validImagesFull, numBatch, sess)))
-
+        saver.save(sess, '../../models/cgan4', global_step=i)
 
 ####################### After training.
-saver.save(sess, '../../models/cgan4', global_step=numEpochs)
+
 
 
 
