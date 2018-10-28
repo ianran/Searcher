@@ -84,7 +84,7 @@ def readData():
 ########################### define batch functions
 
 def getNextBatch(images, labels, batchSize):
-    numOutputClasses = 3
+    numOutputClasses = 2
     indicies = np.random.choice(len(images), batchSize, replace=False)
 
     miniBatchLabels = labels[indicies]
