@@ -122,10 +122,14 @@ def testNetwork(labels, images, batchSize, sess):
 
    labelsClass = np.empty(len(labels), dtype=np.int32)
    labelsClass = np.argmax(labels, axis=1)
+
+   preClass = np.empty(len(labels), dtype=np.int32)
+   preClass = np.argmax(predictedLabels, axis=1)
+
    # create confusion matrix
    confMat = np.zeros(labels.shape[1])
    for i in range(len(labels)):
-       confMat[predictedClass[i],labelsClass[i]] += 1
+       confMat[preClass[i],labelsClass[i]] += 1
    acc = (confMat[0,0] + confMat[1,1]) / (confMat[0,0] + confMat[0,1] + confMat[1,0] + confMat[1,1])
    print('0 = noPeople, 1 = people')
    print('x : predicted class, y : actual class')
