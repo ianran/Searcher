@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name zipCreation
-#SBATCH --output zip.out
+#SBATCH --output zipValid.out
 #SBATCH --partition normal
 #SBATCH --nodes 1
 #SBATCH --ntasks 1
@@ -25,7 +25,7 @@ echo "/home/ianran/Searcher/labelingTool/FeedImagesToNumpyZip.py"
 
 #sh t.sh
 
-sh run.sh
+sh run.sh /scratch/ianran/validFeed/
 
 #python /home/ianran/Searcher/labelingTool/FeedImagesToNumpyZip.py /home/ianran/feed/ /home/ianran/Searcher/labelingTool/labels.csv 1
 

@@ -14,4 +14,5 @@ feed/
 *.out
 *.gz
 *.pyc
+models/
 __pycache__

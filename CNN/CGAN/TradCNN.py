@@ -87,7 +87,7 @@ def validate(labels, images, batchSize, sess):
    # extra data from max number of batches to finish off validation check
    if (extraData > 0):
       validFeed[x] = images[numValidBatches*numBatch:len(labels)]
-      validFeed[y] = labels[j*numBatch:(j+1)*numBatch]
+      validFeed[y] = labels[numBatch*numValidBatches:len(labels)]
 
       correctlyIdent += sess.run(correct, feed_dict=validFeed)
 

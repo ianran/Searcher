@@ -21,11 +21,11 @@ module load python-dev/361
 
 echo "/home/ianran/Searcher/labelingTool/FeedImagesToNumpyZip.py"
 
-sh ../../labelingToolrun.sh /scratch/ianran/validFeed/
-mv output.npz valid.npz
+#sh ../../labelingTool/run.sh /scratch/ianran/validFeed/
+#mv output.npz valid.npz
 
-sh ../../labelingToolrun.sh /home/ianran/feed/
-mv output.npz train.npz
+#sh ../../labelingTool/run.sh /home/ianran/feed/
+#mv output.npz train.npz
 
 
 module load tensorflow-dev/1.8.0
