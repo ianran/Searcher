@@ -101,7 +101,7 @@ sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 
 numEpochs = 10000
-numDisc = 5
+numDisc = 1
 numBatch = 25
 
 allSynthLabels = np.zeros((numBatch, numOutputClasses), np.float32)
@@ -115,7 +115,7 @@ allSynthLabels[:,numOutputClasses-1] = 1.0
 # @return - accuracy of dataset.
 def validate(labels, images, batchSize, sess):
     validFeed = {trainPhaseGen: False, trainPhaseDis: False, disInputGen: False}
-    validFeed[z] = np.zeros((labels.shape[0],randomVecSize))
+    validFeed[z] = np.zeros((batchSize,randomVecSize))
     numValidBatches = len(labels) // batchSize
     extraData = len(labels) % batchSize
 
@@ -124,14 +124,17 @@ def validate(labels, images, batchSize, sess):
         validFeed[x] = images[j*numBatch:(j+1)*numBatch]
         validFeed[y] = labels[j*numBatch:(j+1)*numBatch]
 
-        correctlyIdent += sess.run(accuracy, feed_dict=validFeed)
+        correctlyIdent += sess.run(correct, feed_dict=validFeed)
 
     # extra data from max number of batches to finish off validation check
     if (extraData > 0):
         validFeed[x] = images[numValidBatches*numBatch:len(validLabelsFull)]
-        validFeed[y] = labels[j*numBatch:(j+1)*numBatch]
+        validFeed[y] = labels[numValidBatches*numBatch:len(validLabelsFull)]
 
-        correctlyIdent += sess.run(accuracy, feed_dict=validFeed)
+
+        validFeed[z] = np.zeros((extraData, randomVecSize))
+
+        correctlyIdent += sess.run(correct, feed_dict=validFeed)
 
     return correctlyIdent / len(labels)
 
