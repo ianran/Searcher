@@ -10,6 +10,24 @@ import numpy as np
 
 ####################### Other utility
 
+# jpegGraph
+# write out a the graph operator to write a jpeg in tensorflow.
+# must be passed an image tensor with 3 channels, and must be
+# scaled between 0-255
+# @param image - the image tensor
+#
+# @returns the operation object for creating the jpeg.
+def jpegGraph(image):
+    scaledImage = tf.cast(image * tf.constant(255.0, dtype=tf.float32), dtype=tf.uint8)
+    op = tf.image.encode_jpeg(scaledImage, format='rgb', quality=100)
+
+# write the jpeg given the graph operation and session given.
+def writeJPEGGivenGraph(filepath, sess, jpegOp):
+    encodedImage = sess.run(jpegOp)
+
+    with open(filepath, 'wb') as fd:
+        fd.write(encodedImage)
+
 # write_jpeg
 # Write a jpeg using tensorflow, the code should work on joker.
 # @param filepath - filepath of the image to write to.

@@ -108,24 +108,14 @@ def generativeNetwork():
         return z, outputGen, trainPhaseGen, genTrainableVars, genOtherVars
 
 
-
-# discrimatveNetwork
-# This creates the network for the discrimatve side for an MNIST image
-# 2 fully connected layers followed by 3 convolutional layers.
+# CNN_Network
+# Generates a fairly standard discrimatve CNN for generic classification
+# of 420,705,3 images.
+# @param disInput - the input to the network.
 #
-# @return   input random vector
-#           output tensor
-#           input train phase variable for discrimatve network
-#           input select input tensor (true = input given from generative network)
-#           list of trainable variables
-#           list of other variables
-def discrimativeNetwork(outputGen):
-    x = tf.placeholder(tf.float32, shape=[None, imageShape[0], imageShape[1], imageShape[2]])
+# @return
+def CNN_Network(disInput):
     trainPhaseDis = tf.placeholder(tf.bool)
-    disInputGen = tf.placeholder(tf.bool)
-
-
-    disInput = tf.cond(disInputGen, true_fn= lambda:outputGen, false_fn= lambda:x)
 
     disTrainableVars = []
     disOtherVars = []
@@ -180,5 +170,25 @@ def discrimativeNetwork(outputGen):
         outputDis, trainableVars, otherVars = cnn.fullConnLayer(flattenedDis, 3, trainPhaseDis)
         disTrainableVars += trainableVars
         disOtherVars += otherVars
+    return outputDis, trainPhaseDis, disTrainableVars, disOtherVars
 
-    return x, outputDis, trainPhaseDis, disInputGen, disTrainableVars, disOtherVars
+# discrimatveNetwork
+# This creates the network for the discrimatve side for an MNIST image
+# 2 fully connected layers followed by 3 convolutional layers.
+#
+# @return   input random vector
+#           output tensor
+#           input train phase variable for discrimatve network
+#           input select input tensor (true = input given from generative network)
+#           list of trainable variables
+#           list of other variables
+def discrimativeNetwork(outputGen):
+    x = tf.placeholder(tf.float32, shape=[None, imageShape[0], imageShape[1], imageShape[2]])
+    disInputGen = tf.placeholder(tf.bool)
+
+
+    disInput = tf.cond(disInputGen, true_fn= lambda:outputGen, false_fn= lambda:x)
+
+
+
+    return x, CNN_Network(disInput), disInputGen

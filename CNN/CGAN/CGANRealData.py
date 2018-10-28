@@ -52,12 +52,12 @@ print(imageShape)
 z, outputGen, trainPhaseGen, genTrainableVars, \
     genOtherVars = cgan.generativeNetwork()
 
-x, outputDis, trainPhaseDis, disInputGen, disTrainableVars, \
-    disOtherVars = cgan.discrimativeNetwork(outputGen)
+x, outputDis, trainPhaseDis, disTrainableVars, \
+    disOtherVars, disInputGen = cgan.discrimativeNetwork(outputGen)
 
 y = tf.placeholder(tf.float32, shape=[None, numOutputClasses])
 
-
+jpegOpGen = dt.jpegGraph(outputGen)
 
 
 ####################### define accuracy, and encode functions
@@ -100,9 +100,9 @@ sess = tf.Session()
 
 sess.run(tf.global_variables_initializer())
 
-numEpochs = 10000
+numEpochs = 4000
 numDisc = 5
-numBatch = 25
+numBatch = 35
 
 allSynthLabels = np.zeros((numBatch, numOutputClasses), np.float32)
 allSynthLabels[:,numOutputClasses-1] = 1.0
@@ -151,16 +151,17 @@ for i in range(numEpochs):
         #
         # randomVector -> GenerativeNetwork -> synth images
         #
-        randVec = np.random.normal(0.0,1.0,(numBatch//2,randomVecSize))
+        randVec = np.random.uniform(0.0,1.0,(numBatch//2,randomVecSize))
         feedGen[z] = randVec
         synthImages = sess.run(outputGen, feed_dict=feedGen)
         synthLabels = np.zeros((numBatch//2,numOutputClasses), np.float32)
         synthLabels[:,numOutputClasses-1] = 1.0
 
-        if (j == 0 and i % 5 == 0):
+        if (j == 0 and i % 10 == 0):
             # save a synth image a few times.
             #write_jpeg('/scratch/ianran/img/synthImage'+str(i)+'.jpg', synthImages[0])
-            dt.write_jpeg('img/synthImage'+str(i)+'.jpg', synthImages[0], imageShape)
+            #dt.write_jpeg('img/synthImage'+str(i)+'.jpg', synthImages[0], imageShape)
+            dt.writeJPEGGivenGraph('img/synthImage'+str(i)+'.jpg', sess, jpegOpGen)
 
         # append synth images with real images.
         realImages, realLabels = dt.getNextBatch(trainImagesFull, trainLabelsFull, numBatch//2)
@@ -185,14 +186,14 @@ for i in range(numEpochs):
     #
     # random vector -> generativeNetwork -> discrimativeNetwork -> maxmize loss
     #
-    randVec = np.random.normal(0,1.0,(numBatch,randomVecSize))
+    randVec = np.random.uniform(0,1.0,(numBatch,randomVecSize))
     feedGenTrain[z] = randVec
 
     # train generative network
     sess.run(genTrainStep, feed_dict=feedGenTrain)
 
     ######### validate network and save model
-    if (i % 50 == 0 or i == (numEpochs - 1)):
+    if (i % 50 == 49 or i == (numEpochs - 1)):
         print('Validation accuracy = ' + \
             str(validate(validLabelsFull, validImagesFull, numBatch, sess)))
         saver.save(sess, '../../models/cgan4', global_step=i)
@@ -209,7 +210,7 @@ print(acc)
 
 print('generating synthesized images')
 genTestFeed = {trainPhaseGen: False, trainPhaseDis: False, disInputGen: True}
-randVec = np.random.normal(0.0,1.0,(100,randomVecSize))
+randVec = np.random.uniform(0.0,1.0,(100,randomVecSize))
 genTestFeed[z] = randVec
 synthImages = sess.run(outputGen, feed_dict=genTestFeed)
 
