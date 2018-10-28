@@ -114,7 +114,7 @@ def generativeNetwork():
 # @param disInput - the input to the network.
 #
 # @return
-def CNN_Network(disInput):
+def CNN_Network(disInput, numOutputClasses):
     trainPhaseDis = tf.placeholder(tf.bool)
 
     disTrainableVars = []
@@ -167,7 +167,7 @@ def CNN_Network(disInput):
         fc1, trainableVars, otherVars = cnn.fullConnLayer(flattenedDis, 720, trainPhaseDis)
         disTrainableVars += trainableVars
         disOtherVars += otherVars
-        outputDis, trainableVars, otherVars = cnn.fullConnLayer(flattenedDis, 3, trainPhaseDis)
+        outputDis, trainableVars, otherVars = cnn.fullConnLayer(flattenedDis, numOutputClasses, trainPhaseDis)
         disTrainableVars += trainableVars
         disOtherVars += otherVars
     return outputDis, trainPhaseDis, disTrainableVars, disOtherVars
@@ -191,4 +191,4 @@ def discrimativeNetwork(outputGen):
 
 
 
-    return x, CNN_Network(disInput), disInputGen
+    return x, CNN_Network(disInput, 3), disInputGen

@@ -128,8 +128,8 @@ def validate(labels, images, batchSize, sess):
 
     # extra data from max number of batches to finish off validation check
     if (extraData > 0):
-        validFeed[x] = images[numValidBatches*numBatch:len(validLabelsFull)]
-        validFeed[y] = labels[numValidBatches*numBatch:len(validLabelsFull)]
+        validFeed[x] = images[numValidBatches*numBatch:len(labels)]
+        validFeed[y] = labels[numValidBatches*numBatch:len(labels)]
 
 
         validFeed[z] = np.zeros((extraData, randomVecSize))

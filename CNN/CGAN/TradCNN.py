@@ -1,4 +1,4 @@
-TradCNN.py
+# TradCNN.py
 # Written Ian Rankin September 2018
 #
 # This is just a traditonal CNN
@@ -13,21 +13,21 @@ import Dataset as dt
 
 # image shape for MNIST
 imageShape = (405, 720, 3)
-numOutputClasses = 3
+numOutputClasses = 2
 randomVecSize = 256
 print(imageShape)
 
 x = tf.placeholder(tf.float32, shape=[None, imageShape[0], imageShape[1], imageShape[2]])
-output, trainPhase, trainableVars, otherVars = cgan.CNN_Network(x)
+output, trainPhase, trainableVars, otherVars = cgan.CNN_Network(x, numOutputClasses)
 
 y = tf.placeholder(tf.float32, shape=[None, numOutputClasses])
 
-jpegOpGen = dt.jpegGraph(x)
+jpegOpGen = dt.jpegGraph(x[0])
 
 
 ####################### define accuracy, and encode functions
 actualClass = tf.argmax(y, axis=1)
-predictedClass = tf.argmax(outputDis, axis=1)
+predictedClass = tf.argmax(output, axis=1)
 equals = tf.equal(actualClass, predictedClass)
 
 # cast integers to float for reduce mean to work correctly.
@@ -36,7 +36,7 @@ correct = tf.reduce_sum(tf.cast(equals, tf.float32))
 
 ####################### define loss and train functions functions
 
-crossEntropy = tf.nn.softmax_cross_entropy_with_logits_v2(labels=y, logits=outputDis)
+crossEntropy = tf.nn.softmax_cross_entropy_with_logits_v2(labels=y, logits=output)
 print(crossEntropy)
 loss = tf.reduce_mean(crossEntropy)
 print(loss)
@@ -45,7 +45,7 @@ saver = tf.train.Saver(trainableVars + otherVars)
 
 # discrimitive optimizer
 optimizer = tf.train.AdamOptimizer(learning_rate=0.005)
-trainStep = discrimatveOptimizer.minimize(loss, var_list=trainableVars)
+trainStep = optimizer.minimize(loss, var_list=trainableVars)
 
 
 ########################### Read in training data.
@@ -82,14 +82,14 @@ def validate(labels, images, batchSize, sess):
       validFeed[x] = images[j*numBatch:(j+1)*numBatch]
       validFeed[y] = labels[j*numBatch:(j+1)*numBatch]
 
-      correctlyIdent += sess.run(accuracy, feed_dict=validFeed)
+      correctlyIdent += sess.run(correct, feed_dict=validFeed)
 
    # extra data from max number of batches to finish off validation check
    if (extraData > 0):
-      validFeed[x] = images[numValidBatches*numBatch:len(validLabelsFull)]
+      validFeed[x] = images[numValidBatches*numBatch:len(labels)]
       validFeed[y] = labels[j*numBatch:(j+1)*numBatch]
 
-      correctlyIdent += sess.run(accuracy, feed_dict=validFeed)
+      correctlyIdent += sess.run(correct, feed_dict=validFeed)
 
    return correctlyIdent / len(labels)
 
@@ -97,83 +97,28 @@ def validate(labels, images, batchSize, sess):
 ###################### Training
 
 for i in range(numEpochs):
+   feed = {trainPhase: True}
    print('epoch = ' + str(i))
-   ################### Train discrimative network
-   feedDis = {trainPhaseGen: False, trainPhaseDis: False, disInputGen: True}
-   for j in range(numDisc):
-       sess.run(discTrainStep, feed_dict=feed)
+   images, labels = dt.getNextBatch(trainImagesFull, trainLabelsFull, numBatch)
+   feed[x] = images
+   feed[y] = labels
 
-      # generate synthesized images, and labels
-      #
-      # randomVector -> GenerativeNetwork -> synth images
-      #
-      randVec = np.random.uniform(0.0,1.0,(numBatch//2,randomVecSize))
-      feedGen[z] = randVec
-      synthImages = sess.run(outputGen, feed_dict=feedGen)
-      synthLabels = np.zeros((numBatch//2,numOutputClasses), np.float32)
-      synthLabels[:,numOutputClasses-1] = 1.0
-
-      if (j == 0 and i % 10 == 0):
-           # save a synth image a few times.
-           #write_jpeg('/scratch/ianran/img/synthImage'+str(i)+'.jpg', synthImages[0])
-           #dt.write_jpeg('img/synthImage'+str(i)+'.jpg', synthImages[0], imageShape)
-           dt.writeJPEGGivenGraph('img/synthImage'+str(i)+'.jpg', sess, jpegOpGen)
-
-      # append synth images with real images.
-      realImages, realLabels = dt.getNextBatch(trainImagesFull, trainLabelsFull, numBatch//2)
-      trainImages = np.append(synthImages, realImages, 0)
-      trainLabels = np.append(synthLabels, realLabels, 0)
-
-      ######### set the training phases and input to the discrimater.
-      #
-      # synthImages + realImages -> discrimativeNetwork -> minimize loss
-      #
-      feed = {trainPhaseGen: False, trainPhaseDis: True, disInputGen: False}
-      feed[x] = trainImages
-      feed[y] = trainLabels
-      feed[z] = np.zeros((numBatch,randomVecSize))
-
-      #print('About to train Discrimitive network')
-      sess.run(discTrainStep, feed_dict=feed)
-      #print('Trainged disc network')
-   ################# train generative network
-   # set training phase to generative network, and the input of discrimative network
-   # to be the generative network
-   #
-   # random vector -> generativeNetwork -> discrimativeNetwork -> maxmize loss
-   #
-   randVec = np.random.uniform(0,1.0,(numBatch,randomVecSize))
-   feedGenTrain[z] = randVec
-
-   # train generative network
-   sess.run(genTrainStep, feed_dict=feedGenTrain)
+   sess.run(trainStep, feed_dict=feed)
 
    ######### validate network and save model
    if (i % 50 == 49 or i == (numEpochs - 1)):
       print('Validation accuracy = ' + \
            str(validate(validLabelsFull, validImagesFull, numBatch, sess)))
-      saver.save(sess, '../../models/cgan4', global_step=i)
+   if i % 100 == 99 or i == (numEpochs - 1):
+       saver.save(sess, '../../models/cnn4', global_step=i)
 
 ####################### After training.
-
-
 
 
 acc = validate(validLabelsFull, validImagesFull, numBatch, sess)
 
 print('test accuracy = ')
 print(acc)
-
-print('generating synthesized images')
-genTestFeed = {trainPhaseGen: False, trainPhaseDis: False, disInputGen: True}
-randVec = np.random.uniform(0.0,1.0,(100,randomVecSize))
-genTestFeed[z] = randVec
-synthImages = sess.run(outputGen, feed_dict=genTestFeed)
-
-for i in range(synthImages.shape[0]):
-   #print('bob')
-   write_jpeg('/scratch/ianran/img/testSynthReal'+str(i)+'.jpg', synthImages[i])
-
 
 
 
