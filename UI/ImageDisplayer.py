@@ -102,5 +102,7 @@ class ImageDisplayer:
     def addImgFiles(self, newFiles):
         if len(newFiles) > 0:
             self.files.extend(newFiles)
+
             if not self.running:
+                self.running = True
                 self.thread.start()
