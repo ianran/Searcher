@@ -20,8 +20,8 @@ class OrangeHSVSeg:
         """
 
         self.__hsv_threshold_hue = [0, 30]
-        self.__hsv_threshold_saturation = [102, 192]
-        self.__hsv_threshold_value = [190, 255]
+        self.__hsv_threshold_saturation = [60, 255]
+        self.__hsv_threshold_value = [220, 255]
 
         self.hsv_threshold_output = None
 

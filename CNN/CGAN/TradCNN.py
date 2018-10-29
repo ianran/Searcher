@@ -106,7 +106,8 @@ def testNetwork(labels, images, batchSize, sess):
    numValidBatches = len(labels) // batchSize
    extraData = len(labels) % batchSize
 
-   predictedLabels = np.empty(len(labels))
+   print('testNetwork called')
+   predictedLabels = np.empty(len(labels), dtype=np.int32)
    for j in range(numValidBatches):
       validFeed[x] = images[j*numBatch:(j+1)*numBatch]
       validFeed[y] = labels[j*numBatch:(j+1)*numBatch]
@@ -118,16 +119,21 @@ def testNetwork(labels, images, batchSize, sess):
       validFeed[x] = images[numValidBatches*numBatch:len(labels)]
       validFeed[y] = labels[numValidBatches*numBatch:len(labels)]
 
-      predictedLabels[numValidBatches*numBatch:len(labels)] = sess.run(correct, feed_dict=validFeed)
+      predictedLabels[numValidBatches*numBatch:len(labels)] = sess.run(predictedClass, feed_dict=validFeed)
 
+   print('before casting into argmax')
    labelsClass = np.empty(len(labels), dtype=np.int32)
    labelsClass = np.argmax(labels, axis=1)
 
-   preClass = np.empty(len(labels), dtype=np.int32)
-   preClass = np.argmax(predictedLabels, axis=1)
+   #preClass = np.empty(len(labels), dtype=np.int32)
+   #preClass = np.argmax(predictedLabels, axis=1)
+   preClass = predictedLabels
+
+   print(labelsClass.shape)
+   print(preClass.shape)
 
    # create confusion matrix
-   confMat = np.zeros(labels.shape[1])
+   confMat = np.zeros((labels.shape[1],labels.shape[1]))
    for i in range(len(labels)):
        confMat[preClass[i],labelsClass[i]] += 1
    acc = (confMat[0,0] + confMat[1,1]) / (confMat[0,0] + confMat[0,1] + confMat[1,0] + confMat[1,1])

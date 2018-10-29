@@ -7,7 +7,9 @@ import glob
 import shutil
 import sys
 sys.path.append('../../../labelingTool/')
+sys.path.append('../../../UI/')
 import labelReader
+import ImageDisplayer
 from enum import Enum
 from mpl_toolkits import mplot3d
 from progressbar import ProgressBar
@@ -117,6 +119,9 @@ csvFile = sys.argv[2]
 predDir = sys.argv[3]
 
 
+# Dispalyer object initialization
+display = ImageDisplayer.ImageDisplayer()
+
 # Read in image labels
 labels = labelReader.readLabelsDict(csvFile)
 
@@ -133,7 +138,6 @@ segImg = np.zeros((imgSize[0], imgSize[1]))
 
 # Create RGB Segmenter object
 seg = OrangeSegRGB()
-print('Segmentation progress:')
 
 
 # Threshold
@@ -143,6 +147,9 @@ thres = 20
 # Create progress bar for image segmentation
 prog1  = ProgressBar()
 
+
+
+print('Segmentation progress:')
 
 # Read images one at a time and put them through color segmentation.
 for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
@@ -166,6 +173,9 @@ for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
 	if orangePixNum >= thres:
 		orangeDect[key] = True
 		shutil.copyfile(fName, predDir + key)
+		
+		# Add path for predicted orange images
+		display.addImgFiles(glob.glob(predDir + key))
 	# Label as False
 	else:
 		orangeDect[key] = False
