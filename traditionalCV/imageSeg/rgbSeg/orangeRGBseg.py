@@ -177,7 +177,7 @@ for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
 
 
 # Calculate True Positive Rate and False Positive Rate
-tpr,fpr = findTPRandFPR(labels, orangeDect)
+tpr,fpr = findTPRandFPR(labels, orangeDict)
 
 print('')
 print('TPR = ', tpr)
