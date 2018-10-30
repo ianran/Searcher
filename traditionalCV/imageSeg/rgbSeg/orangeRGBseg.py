@@ -127,7 +127,7 @@ labels = labelReader.readLabelsDict(csvFile)
 
 
 # Initialize dict for predicted labels
-orangeDect = {}
+orangeDict = {}
 
 
 # Image characteristics
@@ -146,10 +146,8 @@ thres = 20
 
 # Create progress bar for image segmentation
 prog1  = ProgressBar()
-
-
-
 print('Segmentation progress:')
+
 
 # Read images one at a time and put them through color segmentation.
 for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
@@ -157,7 +155,7 @@ for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
 	fNameSplit = fName.split('/')
 	key = fNameSplit[len(fNameSplit)-1]
 
-	orangeDect[key] = []
+	orangeDict[key] = []
 
 	# Read in image
 	img = mpimg.imread(fName)
@@ -171,14 +169,11 @@ for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
 
 	# Label as True and copy image to directory containing predicted orange pictures
 	if orangePixNum >= thres:
-		orangeDect[key] = True
+		orangeDict[key] = True
 		shutil.copyfile(fName, predDir + key)
-		
-		# Add path for predicted orange images
-		display.addImgFiles(glob.glob(predDir + key))
 	# Label as False
 	else:
-		orangeDect[key] = False
+		orangeDict[key] = False
 
 
 # Calculate True Positive Rate and False Positive Rate
@@ -188,3 +183,7 @@ print('')
 print('TPR = ', tpr)
 print('FPR = ', fpr)
 print('')
+
+
+# Add path for predicted orange images
+display.addImgFiles(glob.glob(predDir + '*.jpg'))

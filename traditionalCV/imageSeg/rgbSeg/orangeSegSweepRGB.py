@@ -123,7 +123,7 @@ labels = labelReader.readLabelsDict(csvFile)
 
 
 # Initialize dict for predicted labels
-orangeDect = {}
+orangeDict = {}
 
 
 # Image characteristics
@@ -150,7 +150,7 @@ for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
 	fNameSplit = fName.split('/')
 	key = fNameSplit[len(fNameSplit)-1]
 
-	orangeDect[key] = []
+	orangeDict[key] = []
 
 	# Read in image
 	img = mpimg.imread(fName)
@@ -167,14 +167,14 @@ for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
 	for th in thres:
 		# Label as True
 		if orangePixNum >= th:
-			orangeDect[key].append(True)
+			orangeDict[key].append(True)
 		# Label as False
 		else:
-			orangeDect[key].append(False)
+			orangeDict[key].append(False)
 
 
 # Calculate ROC
-tpr,fpr = findTPRandFPR(labels, orangeDect, np.size(thres))
+tpr,fpr = findTPRandFPR(labels, orangeDict, np.size(thres))
 
 print(tpr[1], fpr[1], thres[1])
 
@@ -189,7 +189,7 @@ plt.yticks(np.arange(0,1.1,0.05))
 plt.grid()
 plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
-plt.title('Receiver operating characteristic')
+plt.title('RGB Receiver operating characteristic')
 plt.legend(loc="lower right")
 
 
