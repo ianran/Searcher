@@ -106,3 +106,12 @@ class ImageDisplayer:
             if not self.running:
                 self.running = True
                 self.thread.start()
+
+
+
+#display = ImageDisplayer()
+#files = glob.glob('../labelingTool/feed/*.jpg')
+#for i in range(len(files)):
+#    print(i)
+#    display.addImgFiles([files[i]])
+#    time.sleep(1)

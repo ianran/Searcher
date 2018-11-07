@@ -21,4 +21,4 @@ name=${name##*/}
 echo $name
 #
 # run ffmpeg command
-ffmpeg -i $1 -r 2 $name-%05d.jpg
+ffmpeg -i $1 -r 2 -q:v 1 $name-%05d.jpg
