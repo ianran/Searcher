@@ -4,13 +4,13 @@ Searcher is a project to aid search and rescue operations by autonomously flying
 
 
 List of video files:
-##AMountain videos
+## AMountain videos
 
 AMountain1.MOV - not labeled
 
 AMountain2.MOV - labeled
 
-##Animas1 video
+## Animas1 video
 
 Animas1_0004.MOV - Not labeled
 
@@ -18,11 +18,11 @@ Animas1_0008.MOV - Labeled
 
 Animas1_0009.MOV - Not Labeled
 
-##AnimasV2 video
+## AnimasV2 video
 
 AnimasV2???? (Must be on my desktop only???)
 
-##Cascade Creek Video
+## Cascade Creek Video
 
 CascadeCreek_0001.MOV - Not Labeled
 
@@ -30,21 +30,21 @@ CascadeCreek_0002.MOV - Not labeled
 
 CascadeCreek_0003.MOV - Not labeled
 
-##FallsCreek Video (lots of data)
+## FallsCreek Video (lots of data)
 
 FallsCreek_0012.MOV - Not labeled
 
 FallsCreek_0014.MOV - Not labeled
 
 
-##GrassyField Videos (Should be renamed before being labeled to avoid naming conflicts)
+## GrassyField Videos (Should be renamed before being labeled to avoid naming conflicts)
 
 xxxxxx_0003.MOV - Not labeled
 
 xxxxxx_0009.MOV - Not labeled
 
 
-##HorseShoeData
+## HorseShoeData
 
 DJI_0001.MOV - Don't Bother (or label as all not people)
 
@@ -66,7 +66,7 @@ DJI_0012.MOV - Don't bother
 
 DJI_0013.MOV - Don't bother
 
-##Narnia Data
+## Narnia Data
 
 DJI_0014.MOV - labeled
 
@@ -78,7 +78,7 @@ DJI_0017.MOV - don't bother
 
 DJI_0018.MOV - not labeled (possible somebody labeled but didn't upload labels) (may not be worth it, but is at least viable)
 
-##StochajData
+## StochajData
 
 DJI_0040.MOV - labeled
 
