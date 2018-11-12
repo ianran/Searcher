@@ -1,3 +1,12 @@
+#########################################################################################
+# orangeSegSweepRGB.py									#
+#											#
+# Joellen Lansford									#
+#											#
+# This program takes in a directory of images and a csv file with labels, performs RGB  #
+# segementation, labels images containing orange while sweeping over several 		#
+# thresholds, calculates TPR and FPR, and generates an ROC curve.			#
+# #######################################################################################
 import cv2
 import numpy as np
 import math
@@ -55,7 +64,7 @@ class OrangeSegRGB:
 		return cv2.inRange(input, (red[0], green[0], blue[0]),  (red[1], green[1], blue[1]))
 
 
-# Function calculate True Positive and False Positive Rate by counting number of true positives,
+# Function that calculates True Positive and False Positive Rate by counting number of true positives,
 # false positives, true negatives, and false negatives
 # Input:
 #	true -- Dictionary with true labels
@@ -192,13 +201,3 @@ plt.ylabel('True Positive Rate')
 plt.title('RGB Receiver operating characteristic')
 plt.legend(loc="lower right")
 
-
-
-# Plot tpr vs fpr vs threshold
-fig = plt.figure()
-ax = fig.add_subplot(111, projection = '3d')
-ax.scatter(tpr[1:21], fpr[1:21], thres[1:21], c='r', marker='o')
-ax.set_xlabel('True Positive Rate')
-ax.set_zlabel('False Positive Rate')
-ax.set_zlabel('Threshold')
-plt.show()

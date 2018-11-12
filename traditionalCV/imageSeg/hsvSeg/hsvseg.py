@@ -84,6 +84,13 @@ def ROC(lab, genLab, thresh):
     TNR = TNC/(FPC + TNC)
     FNR = FNC/(TPC + FNC)
 
+    print('TP = ', TPC)
+    print('FP = ', FPC)
+    print('TN = ', TNC)
+    print('FN = ', FNC)
+
+
+
     return TPR, FPR, TNR, FNR
 
 # End ROC

@@ -1,3 +1,12 @@
+#########################################################################################
+# orangeRGBseg.py									#
+#											#
+# Joellen Lansford									#
+#											#
+# This program reads in a directory of images and a csv file of image labels, performs 	#
+# RGB segmentation on them, moves images with orange pixels to a new directory, 	#
+# displays the images with orange, and calculates TPR, FPR, TNR, and FNR.		#
+#########################################################################################
 import cv2
 import numpy as np
 import math
@@ -51,22 +60,21 @@ class OrangeSegRGB:
 		Returns:
 			A black and white numpy.ndarray.
 		"""
-		# Replace below if images are read in thorugh opencv
-		# out = cv2.cvtColor(input, cv2.COLOR_BGR2RGB)
-		# return cv2.inrange(out, (red[0], green[0], blue[0]), (red[1], green[1], blue[1]))
 
 		return cv2.inRange(input, (red[0], green[0], blue[0]),  (red[1], green[1], blue[1]))
 
 
-# Function to calculate True Positive and False Positive Rate by counting number of true positives,
+# Function to calculate True Positive, False Positive, True Negative, and False Negative Rate by counting number of true positives,
 # false positives, true negatives, and false negatives
 # Input:
 #	true -- Dictionary with true labels
 #	pred -- Dictionary with predicted labels
 # Output:
-#	tpr -- Array with true positive rates for thresholds
-# 	fpr -- Array with false positive rates for thresholds
-def findTPRandFPR(true, pred):
+#	tpr -- True positive rate
+# 	fpr -- False positive rate
+# 	tnr -- True negative rate
+# 	fnr -- False negative rate
+def findRates(true, pred):
 	# Create progress bar for finding rates
 	print('TPR and FPR progress:')
 	prog2 = ProgressBar()
@@ -74,6 +82,8 @@ def findTPRandFPR(true, pred):
 	# Initialize rate arrays
 	tpr = 0.
 	fpr = 0.
+	tnr = 0.
+	fnr = 0.
 	
 	tp = 0.
 	fp = 0.
@@ -102,7 +112,18 @@ def findTPRandFPR(true, pred):
 	# Calculate false positive rate
 	fpr = fp / (fp + tn)
 
-	return tpr, fpr
+	# Calculate true negative rate
+	tnr = tn / (fp + tn)
+
+	# Calculate false negative rate
+	fnr = fn / (fn + tp)
+
+	print('TP = ', tp)
+	print('FP = ', fp)
+	print('TN = ', tn)
+	print('FN = ', fn)
+
+	return tpr, fpr, tnr, fnr
 
 
 # check if all arguments are given, and output usage if not
@@ -150,6 +171,7 @@ print('Segmentation progress:')
 
 
 # Read images one at a time and put them through color segmentation.
+i = 0
 for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
 	# Key for label dict is image name
 	fNameSplit = fName.split('/')
@@ -175,13 +197,19 @@ for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
 	else:
 		orangeDict[key] = False
 
+	i += 1
+
+print('')
+print('Num of images: ', i)
 
 # Calculate True Positive Rate and False Positive Rate
-tpr,fpr = findTPRandFPR(labels, orangeDict)
+tpr,fpr,tnr,fnr = findRates(labels, orangeDict)
 
 print('')
 print('TPR = ', tpr)
 print('FPR = ', fpr)
+print('TNR = ', tnr)
+print('FNR = ', fnr)
 print('')
 
 
