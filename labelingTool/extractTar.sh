@@ -15,6 +15,6 @@
 
 echo "Started extraction of images"
 
-for i in /scratch/ianran/*tar.gz; do tar -xvzf $i ;done
+tar -xvzf $1
 
 echo "Completed extraction"
