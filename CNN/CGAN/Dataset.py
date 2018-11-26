@@ -106,7 +106,7 @@ def readDataNormalized():
     totalImagesClass = np.sum(trainLabels, axis=0)
     totalImages = totalImagesClass[0] + totalImagesClass[1]
 
-    trainImagesPeople = np.empty((totalImagesClass[1],trainImages.shape[1], \
+    trainImagesPeople = np.empty((int(totalImagesClass[1]),trainImages.shape[1], \
         trainImages.shape[2], trainImages.shape[3]))
 
     trainImagesNoPeople = np.empty((totalImagesClass[0],trainImages.shape[1], \
