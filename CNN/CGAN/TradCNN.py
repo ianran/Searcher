@@ -51,8 +51,10 @@ trainStep = optimizer.minimize(loss, var_list=trainableVars)
 ########################### Read in training data.
 
 # read in data
-trainImagesFull, trainLabelsFull, validImagesFull, validLabelsFull \
-      = dt.readData()
+#trainImagesFull, trainLabelsFull, validImagesFull, validLabelsFull \
+#      = dt.readData()
+trainImagesPeople, trainImagesNoPeople, validImages, validLabels \
+    = dt.readDataNormalized()
 
 
 ########################## Training
@@ -61,7 +63,7 @@ sess = tf.Session()
 
 sess.run(tf.global_variables_initializer())
 
-numEpochs = 4000
+numEpochs = 50
 numDisc = 5
 numBatch = 35
 
@@ -147,20 +149,23 @@ def testNetwork(labels, images, batchSize, sess):
 ###################### Training
 
 for i in range(numEpochs):
-   feed = {trainPhase: True}
-   print('epoch = ' + str(i))
-   images, labels = dt.getNextBatch(trainImagesFull, trainLabelsFull, numBatch)
-   feed[x] = images
-   feed[y] = labels
+   numBatchesPerEpoch, epochTuple = generateEpoch(trainImagesPeople, \
+        trainImagesNoPeople, batchSize)
+   for j in range(numBatchesPerEpoch):
+       feed = {trainPhase: True}
+       print('epoch = ' + str(i))
+       images, labels = dt.getNextBatch(trainImagesFull, trainLabelsFull, numBatch)
+       feed[x] = images
+       feed[y] = labels
 
-   sess.run(trainStep, feed_dict=feed)
+       sess.run(trainStep, feed_dict=feed)
 
    ######### validate network and save model
-   if (i % 50 == 0 or i == (numEpochs - 1)):
+   if (i % 3 == 0 or i == (numEpochs - 1)):
       #print('Validation accuracy = ' + \
       #    str(validate(validLabelsFull, validImagesFull, numBatch, sess)))
       testNetwork(validLabelsFull, validImagesFull, numBatch, sess)
-   if i % 100 == 99 or i == (numEpochs - 1):
+   if i % 6 == 99 or i == (numEpochs - 1):
        saver.save(sess, '../../models/cnn5', global_step=i)
 
 ####################### After training.
