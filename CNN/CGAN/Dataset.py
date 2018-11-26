@@ -242,16 +242,17 @@ def getNextBatchEpoch(i, epochTuple, batchSize):
     batchLabels = np.zeros((batchSize, numOutputClasses))
 
     for j in range(batchSize):
+        print('i thing = ' + str(i))
         if epochTuple[3][i] == 1:
             # people
-            batchImages[j] = epochTuple[0][i]
+            batchImages[j] = epochTuple[0][epochTuple[2][i]]
             batchLabels[j][1] = 1.0
         else:
             # no people
-            batchImages[j] = epochTuple[1][i]
+            batchImages[j] = epochTuple[1][epochTuple[2][i]]
             batchLabels[j][0] = 1.0
         i += 1
-
+    print('i thing at end = ' + str(i))
     return batchImages, batchLabels, i
 
 # Test code
