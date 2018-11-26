@@ -5,6 +5,7 @@
 
 import tensorflow as tf
 import numpy as np
+import random
 
 
 
@@ -163,17 +164,17 @@ def generateRandomBinaryWithSameTotalNumber(num):
         randBinary = random.randint(0,1)
         if randBinary == 1:
             if totalNumOne < totalNumOneAllowed:
-                randBinary[i] = 1
+                randVec[i] = 1
                 totalNumOne += 1
             else:
-                randBinary[i] = 0
+                randVec[i] = 0
                 totalNumZero += 1
         else:
             if totalNumZero < totalNumZeroAllowed:
-                randBinary[i] = 0
+                randVec[i] = 0
                 totalNumZero += 1
             else:
-                randBinary[i] = 1
+                randVec[i] = 1
                 totalNumOne += 1
     return randVec
 
@@ -190,7 +191,7 @@ def generateRandomBinaryWithSameTotalNumber(num):
 # @return - numberOfBatchesPerEpoch, epochTuple
 #   epochTuple - (peopleImage, noPeopleImages, epochIndcies, epochSelector)
 def generateEpoch(peopleImages, noPeopleImages, batchSize):
-    minClassSize = int(np.min(len(peopleImages), len(noPeopleImages)))
+    minClassSize = int(min(len(peopleImages), len(noPeopleImages)))
 
     epochSelector = generateRandomBinaryWithSameTotalNumber(minClassSize * 2)
 
@@ -213,7 +214,7 @@ def generateEpoch(peopleImages, noPeopleImages, batchSize):
 
     # generate final epochTuple
     return (minClassSize*2) // batchSize, \
-        (peopleImage, noPeopleImages, epochIndcies, epochSelector)
+        (peopleImages, noPeopleImages, epochIndcies, epochSelector)
 
 # epochTuple = (peopleImages, noPeopleImages, epochIndcies, epochSelector)
 # 1 indicates people, 0 indicates no people
@@ -228,10 +229,10 @@ def getNextBatchEpoch(i, epochTuple, batchSize):
         batchSize += 1
 
     imageSizeEpoch = epochTuple[0].shape
-    size = (imageSizeEpoch[1], imageSizeEpoch[1], imageSizeEpoch[2])
+    size = (imageSizeEpoch[1], imageSizeEpoch[2], imageSizeEpoch[3])
 
     # get next batch of images
-    batchImages = np.empty((batchSize,size[0],size[1],size[3]))
+    batchImages = np.empty((batchSize,size[0],size[1],size[2]))
     batchLabels = np.zeros((batchSize, numOutputClasses))
 
     for j in range(batchSize):

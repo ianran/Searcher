@@ -149,12 +149,13 @@ def testNetwork(labels, images, batchSize, sess):
 ###################### Training
 
 for i in range(numEpochs):
-   numBatchesPerEpoch, epochTuple = generateEpoch(trainImagesPeople, \
-        trainImagesNoPeople, batchSize)
+   numBatchesPerEpoch, epochTuple = dt.generateEpoch(trainImagesPeople, \
+        trainImagesNoPeople, numBatch)
+   k = 0
    for j in range(numBatchesPerEpoch):
        feed = {trainPhase: True}
        print('epoch = ' + str(i))
-       images, labels = dt.getNextBatch(trainImagesFull, trainLabelsFull, numBatch)
+       images, labels, k = dt.getNextBatchEpoch(k, epochTuple, numBatch)
        feed[x] = images
        feed[y] = labels
 
