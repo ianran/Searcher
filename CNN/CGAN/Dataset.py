@@ -192,8 +192,10 @@ def generateRandomBinaryWithSameTotalNumber(num):
 #   epochTuple - (peopleImage, noPeopleImages, epochIndcies, epochSelector)
 def generateEpoch(peopleImages, noPeopleImages, batchSize):
     minClassSize = int(min(len(peopleImages), len(noPeopleImages)))
+    print('minClassSize = ' + str(minClassSize))
 
     epochSelector = generateRandomBinaryWithSameTotalNumber(minClassSize * 2)
+    print('len(epochSelector) = ' + str(len(epochSelector)))
 
     # generate random indcies for epoch
     # will down sample larger class
@@ -212,6 +214,7 @@ def generateEpoch(peopleImages, noPeopleImages, batchSize):
             epochIndcies[i] = noPeopleIndcies[iNoPeople]
             iNoPeople += 1
 
+    print('length people images = ' + str(len(peopleImages)))
     # generate final epochTuple
     return (minClassSize*2) // batchSize, \
         (peopleImages, noPeopleImages, epochIndcies, epochSelector)
@@ -224,12 +227,15 @@ def generateEpoch(peopleImages, noPeopleImages, batchSize):
 #
 # @return batchImages, batchLabels, i
 def getNextBatchEpoch(i, epochTuple, batchSize):
+    print(i)
     numOutputClasses = 2
     if batchSize % 2 == 1:
         batchSize += 1
 
     imageSizeEpoch = epochTuple[0].shape
     size = (imageSizeEpoch[1], imageSizeEpoch[2], imageSizeEpoch[3])
+
+    print('size = ' + str(size))
 
     # get next batch of images
     batchImages = np.empty((batchSize,size[0],size[1],size[2]))

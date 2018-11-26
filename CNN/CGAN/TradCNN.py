@@ -152,10 +152,12 @@ for i in range(numEpochs):
    numBatchesPerEpoch, epochTuple = dt.generateEpoch(trainImagesPeople, \
         trainImagesNoPeople, numBatch)
    k = 0
+   print('epoch = ' + str(i) + ' with ' + str(numBatchesPerEpoch) + ' batches')
    for j in range(numBatchesPerEpoch):
        feed = {trainPhase: True}
-       print('epoch = ' + str(i))
+       print('\tepoch batch = ' + str(j))
        images, labels, k = dt.getNextBatchEpoch(k, epochTuple, numBatch)
+       print('k = ' + str(k))
        feed[x] = images
        feed[y] = labels
 
