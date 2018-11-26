@@ -109,7 +109,7 @@ def readDataNormalized():
     trainImagesPeople = np.empty((int(totalImagesClass[1]),trainImages.shape[1], \
         trainImages.shape[2], trainImages.shape[3]))
 
-    trainImagesNoPeople = np.empty((totalImagesClass[0],trainImages.shape[1], \
+    trainImagesNoPeople = np.empty((int(totalImagesClass[0]),trainImages.shape[1], \
         trainImages.shape[2], trainImages.shape[3]))
 
     iPeople = 0
