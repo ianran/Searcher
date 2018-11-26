@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import glob
 import shutil
+import scipy.misc
 import sys
 sys.path.append('../../../labelingTool/')
 sys.path.append('../../../UI/')
@@ -126,10 +127,23 @@ def findRates(true, pred):
 	return tpr, fpr, tnr, fnr
 
 
+# Function to find and draw contours of orange pixels found in images
+# Input:
+#	img -- RGB image matrix
+#	segImg -- Binary segmented image matrix
+# Output:
+#	highImg -- RGB highlighted iamge matrix
+def POI(img, segImg):
+	im2, contours, hierarchy = cv2.findContours(segImg, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+	highImg = cv2.drawContours(img, contours, -1, (0,0,255), 2)
+
+	return highImg
+
+
 # check if all arguments are given, and output usage if not
 if (len(sys.argv) != 4):
 	# print usage, and exit program
-	print("USAGE: python orangeRGBseg [imgDir] [csvFile] [predOrange]")
+	print("USAGE: python orangeRGBseg.py [imgDir] [csvFile] [predOrange]")
 	sys.exit()
 #end if
 
@@ -192,7 +206,10 @@ for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
 	# Label as True and copy image to directory containing predicted orange pictures
 	if orangePixNum >= thres:
 		orangeDict[key] = True
-		shutil.copyfile(fName, predDir + key)
+		highImg = POI(img, segImg)
+		saveImg = cv2.cvtColor(highImg, cv2.COLOR_RGB2BGR)
+		cv2.imwrite(predDir + key, saveImg)
+		#shutil.copyfile(fName, predDir + key)
 	# Label as False
 	else:
 		orangeDict[key] = False
