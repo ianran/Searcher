@@ -180,7 +180,13 @@ for i in range(numEpochs):
    if (i % 3 == 0 or i == (numEpochs - 1)):
       #print('Validation accuracy = ' + \
       #    str(validate(validLabelsFull, validImagesFull, numBatch, sess)))
+      print('VALIDATION')
       testNetwork(validLabelsFull, validImagesFull, numBatch, sess)
+      print('TEST SET on last batch')
+      print('batchLabels')
+      print(batchLabels)
+      testNetwork(batchLabels, batchImages, numBatch, sess)
+
    if i % 6 == 5 or i == (numEpochs - 1):
        saver.save(sess, '../../models/cnn8', global_step=i)
 
