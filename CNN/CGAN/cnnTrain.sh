@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name trad
+#SBATCH --job-name trad2
 #SBATCH --output cnn3.out
 #SBATCH --partition gpu
 #SBATCH --nodes 1
