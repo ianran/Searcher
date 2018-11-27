@@ -173,8 +173,10 @@ for i in range(numEpochs):
        tmp, lossCur = sess.run([trainStep, loss], feed_dict=feed)
        print('Loss current = ' + str(lossCur))
        if j % 30 == 0:
-           dt.writeJPEGGivenGraph('/scratch/ianran/img2/' + str(i) + '-' + str(j) + '.jpg',
-                sess, jpegOp)
+           write_jpeg('/scratch/ianran/img2/' + str(i) + '-' + str(j) + '.jpg', \
+                batchImages[0],imageShape)
+           #dt.writeJPEGGivenGraph('/scratch/ianran/img2/' + str(i) + '-' + str(j) + '.jpg',
+            #    sess, jpegOp)
 
    ######### validate network and save model
    if (i % 3 == 0 or i == (numEpochs - 1)):
