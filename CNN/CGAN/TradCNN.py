@@ -22,7 +22,7 @@ output, trainPhase, trainableVars, otherVars = cgan.CNN_Network(x, numOutputClas
 
 y = tf.placeholder(tf.float32, shape=[None, numOutputClasses])
 
-jpegOpGen = dt.jpegGraph(x[0])
+jpegOp = dt.jpegGraph(x[0])
 
 
 ####################### define accuracy, and encode functions
@@ -160,12 +160,15 @@ for i in range(numEpochs):
    print('EPOCH = ' + str(i) + ' with ' + str(numBatchesPerEpoch) + ' batches')
    for j in range(numBatchesPerEpoch):
        print('\tepoch batch = ' + str(j))
-       batchImages, batchLabels, k = dt.getNextBatchEpoch(k, epochTuple, numBatch, \
+       bk = dt.getNextBatchEpoch(k, epochTuple, numBatch, \
             trainImagesPeople, trainImagesNoPeople, batchImages, batchLabels)
        feed[x] = batchImages
        feed[y] = batchLabels
 
        sess.run(trainStep, feed_dict=feed)
+       if j % 30 == 0:
+           dt.writeJPEGGivenGraph('/scratch/ianran/img2/' + str(i) + '-' + str(j),
+                sess, jpegOp)
 
    ######### validate network and save model
    if (i % 3 == 0 or i == (numEpochs - 1)):

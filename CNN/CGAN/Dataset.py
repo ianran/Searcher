@@ -254,7 +254,7 @@ def getNextBatchEpoch(i, epochTuple, batchSize, \
             batchLabels[j][0] = 1.0
             batchLabels[j][1] = 0.0
         i += 1
-    return batchImages, batchLabels, i
+    return i
 
 # Test code
 #readData()
