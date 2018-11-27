@@ -164,7 +164,7 @@ for i in range(numEpochs):
    print('EPOCH = ' + str(i) + ' with ' + str(numBatchesPerEpoch) + ' batches')
    for j in range(numBatchesPerEpoch):
        print('\tepoch batch = ' + str(j))
-       bk = dt.getNextBatchEpoch(k, epochTuple, numBatch, \
+       k = dt.getNextBatchEpoch(k, epochTuple, numBatch, \
             trainImagesPeople, trainImagesNoPeople, batchImages, batchLabels)
        print('k = ' + str(k))
        feed[x] = batchImages
@@ -173,7 +173,7 @@ for i in range(numEpochs):
        tmp, lossCur = sess.run([trainStep, loss], feed_dict=feed)
        print('Loss current = ' + str(lossCur))
        if j % 30 == 0:
-           write_jpeg('/scratch/ianran/img2/' + str(i) + '-' + str(j) + '.jpg', \
+           dt.write_jpeg('/scratch/ianran/img2/' + str(i) + '-' + str(j) + '.jpg', \
                 batchImages[0],imageShape)
            #dt.writeJPEGGivenGraph('/scratch/ianran/img2/' + str(i) + '-' + str(j) + '.jpg',
             #    sess, jpegOp)
