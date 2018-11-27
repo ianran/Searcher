@@ -21,6 +21,7 @@ import random
 def jpegGraph(image):
     scaledImage = tf.cast(image * tf.constant(255.0, dtype=tf.float16), dtype=tf.uint8)
     op = tf.image.encode_jpeg(scaledImage, format='rgb', quality=100)
+    return op
 
 # write the jpeg given the graph operation and session given.
 def writeJPEGGivenGraph(filepath, sess, jpegOp):
