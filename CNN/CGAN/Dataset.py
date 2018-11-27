@@ -190,8 +190,8 @@ def generateRandomBinaryWithSameTotalNumber(num):
 #
 # @return - numberOfBatchesPerEpoch, epochTuple
 #   epochTuple - (peopleImage, noPeopleImages, epochIndcies, epochSelector)
-def generateEpoch(peopleImages, noPeopleImages, batchSize):
-    minClassSize = int(min(len(peopleImages), len(noPeopleImages)))
+def generateEpoch(peopleImagesLen, noPeopleImagesLen, batchSize):
+    minClassSize = int(min(peopleImagesLen, noPeopleImagesLen))
     print('minClassSize = ' + str(minClassSize))
 
     epochSelector = generateRandomBinaryWithSameTotalNumber(minClassSize * 2)
@@ -199,8 +199,8 @@ def generateEpoch(peopleImages, noPeopleImages, batchSize):
 
     # generate random indcies for epoch
     # will down sample larger class
-    peopleIndcies = np.random.choice(len(peopleImages), minClassSize,replace=False)
-    noPeopleIndcies = np.random.choice(len(noPeopleImages), minClassSize,replace=False)
+    peopleIndcies = np.random.choice(peopleImagesLen, minClassSize,replace=False)
+    noPeopleIndcies = np.random.choice(noPeopleImagesLen, minClassSize,replace=False)
 
     epochIndcies = np.empty(minClassSize * 2, np.int)
 
@@ -214,45 +214,46 @@ def generateEpoch(peopleImages, noPeopleImages, batchSize):
             epochIndcies[i] = noPeopleIndcies[iNoPeople]
             iNoPeople += 1
 
-    print('length people images = ' + str(len(peopleImages)))
+    print('length people images = ' + str(peopleImagesLen))
+    print('length no people images = ' + str(noPeopleImagesLen))
     # generate final epochTuple
     return (minClassSize*2) // batchSize, \
-        (peopleImages, noPeopleImages, epochIndcies, epochSelector)
+        (epochIndcies, epochSelector)
 
-# epochTuple = (peopleImages, noPeopleImages, epochIndcies, epochSelector)
+# epochTuple = (epochIndcies, epochSelector)
 # 1 indicates people, 0 indicates no people
 
 # getNextBatchNormalized
 # returns the next training batch and updates the epoch
 #
 # @return batchImages, batchLabels, i
-def getNextBatchEpoch(i, epochTuple, batchSize):
-    print(i)
+def getNextBatchEpoch(i, epochTuple, batchSize, \
+        peopleImages, noPeopleImages, batchImages, batchLabels):
     numOutputClasses = 2
     #if batchSize % 2 == 1:
     #    batchSize += 1
 
-    imageSizeEpoch = epochTuple[0].shape
-    size = (imageSizeEpoch[1], imageSizeEpoch[2], imageSizeEpoch[3])
+    #imageSizeEpoch = epochTuple[0].shape
+    #size = (imageSizeEpoch[1], imageSizeEpoch[2], imageSizeEpoch[3])
 
-    print('size = ' + str(size))
 
     # get next batch of images
-    batchImages = np.empty((batchSize,size[0],size[1],size[2]))
-    batchLabels = np.zeros((batchSize, numOutputClasses))
+    #batchImages = np.empty((batchSize,size[0],size[1],size[2]))
+    #batchLabels = np.zeros((batchSize, numOutputClasses))
 
     print('batchSize = ' + str(batchSize))
     for j in range(batchSize):
-        if epochTuple[3][i] == 1:
+        if epochTuple[1][i] == 1:
             # people
-            batchImages[j] = epochTuple[0][epochTuple[2][i]]
+            batchImages[j] = peopleImages[epochTuple[0][i]]
             batchLabels[j][1] = 1.0
+            batchLabels[j][0] = 0.0
         else:
             # no people
-            batchImages[j] = epochTuple[1][epochTuple[2][i]]
+            batchImages[j] = noPeopleImages[epochTuple[0][i]]
             batchLabels[j][0] = 1.0
+            batchLabels[j][1] = 0.0
         i += 1
-    print('i thing at end = ' + str(i))
     return batchImages, batchLabels, i
 
 # Test code

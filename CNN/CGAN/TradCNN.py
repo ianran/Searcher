@@ -147,20 +147,23 @@ def testNetwork(labels, images, batchSize, sess):
 
 
 ###################### Training
+feed = {trainPhase: True}
+
+# get next batch of images
+batchImages = np.empty((numBatch,imageShape[0],imageShape[1],imageShape[2]))
+batchLabels = np.zeros((numBatch, 2))
 
 for i in range(numEpochs):
-   numBatchesPerEpoch, epochTuple = dt.generateEpoch(trainImagesPeople, \
-        trainImagesNoPeople, numBatch)
-   print('numBatch = ' + str(numBatch))
+   numBatchesPerEpoch, epochTuple = dt.generateEpoch(len(trainImagesPeople), \
+        len(trainImagesNoPeople), numBatch)
    k = 0
-   print('epoch = ' + str(i) + ' with ' + str(numBatchesPerEpoch) + ' batches')
+   print('EPOCH = ' + str(i) + ' with ' + str(numBatchesPerEpoch) + ' batches')
    for j in range(numBatchesPerEpoch):
-       feed = {trainPhase: True}
        print('\tepoch batch = ' + str(j))
-       images, labels, k = dt.getNextBatchEpoch(k, epochTuple, numBatch)
-       print('k = ' + str(k))
-       feed[x] = images
-       feed[y] = labels
+       batchImages, batchLabels, k = dt.getNextBatchEpoch(k, epochTuple, numBatch, \
+            trainImagesPeople, trainImagesNoPeople, batchImages, batchLabels)
+       feed[x] = batchImages
+       feed[y] = batchLabels
 
        sess.run(trainStep, feed_dict=feed)
 
@@ -170,7 +173,7 @@ for i in range(numEpochs):
       #    str(validate(validLabelsFull, validImagesFull, numBatch, sess)))
       testNetwork(validLabelsFull, validImagesFull, numBatch, sess)
    if i % 6 == 5 or i == (numEpochs - 1):
-       saver.save(sess, '../../models/cnn5', global_step=i)
+       saver.save(sess, '../../models/cnn6', global_step=i)
 
 ####################### After training.
 
