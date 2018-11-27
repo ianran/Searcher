@@ -53,7 +53,7 @@ trainStep = optimizer.minimize(loss, var_list=trainableVars)
 # read in data
 #trainImagesFull, trainLabelsFull, validImagesFull, validLabelsFull \
 #      = dt.readData()
-trainImagesPeople, trainImagesNoPeople, validImages, validLabels \
+trainImagesPeople, trainImagesNoPeople, validImagesFull, validLabelsFull \
     = dt.readDataNormalized()
 
 
@@ -151,6 +151,7 @@ def testNetwork(labels, images, batchSize, sess):
 for i in range(numEpochs):
    numBatchesPerEpoch, epochTuple = dt.generateEpoch(trainImagesPeople, \
         trainImagesNoPeople, numBatch)
+   print('numBatch = ' + str(numBatch))
    k = 0
    print('epoch = ' + str(i) + ' with ' + str(numBatchesPerEpoch) + ' batches')
    for j in range(numBatchesPerEpoch):
@@ -168,7 +169,7 @@ for i in range(numEpochs):
       #print('Validation accuracy = ' + \
       #    str(validate(validLabelsFull, validImagesFull, numBatch, sess)))
       testNetwork(validLabelsFull, validImagesFull, numBatch, sess)
-   if i % 6 == 99 or i == (numEpochs - 1):
+   if i % 6 == 5 or i == (numEpochs - 1):
        saver.save(sess, '../../models/cnn5', global_step=i)
 
 ####################### After training.

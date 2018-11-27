@@ -202,7 +202,7 @@ def generateEpoch(peopleImages, noPeopleImages, batchSize):
     peopleIndcies = np.random.choice(len(peopleImages), minClassSize,replace=False)
     noPeopleIndcies = np.random.choice(len(noPeopleImages), minClassSize,replace=False)
 
-    epochIndcies = np.empty(minClassSize * 2)
+    epochIndcies = np.empty(minClassSize * 2, np.int)
 
     iPeople = 0
     iNoPeople = 0
@@ -229,8 +229,8 @@ def generateEpoch(peopleImages, noPeopleImages, batchSize):
 def getNextBatchEpoch(i, epochTuple, batchSize):
     print(i)
     numOutputClasses = 2
-    if batchSize % 2 == 1:
-        batchSize += 1
+    #if batchSize % 2 == 1:
+    #    batchSize += 1
 
     imageSizeEpoch = epochTuple[0].shape
     size = (imageSizeEpoch[1], imageSizeEpoch[2], imageSizeEpoch[3])
@@ -241,8 +241,8 @@ def getNextBatchEpoch(i, epochTuple, batchSize):
     batchImages = np.empty((batchSize,size[0],size[1],size[2]))
     batchLabels = np.zeros((batchSize, numOutputClasses))
 
+    print('batchSize = ' + str(batchSize))
     for j in range(batchSize):
-        print('i thing = ' + str(i))
         if epochTuple[3][i] == 1:
             # people
             batchImages[j] = epochTuple[0][epochTuple[2][i]]
