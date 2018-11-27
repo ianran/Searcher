@@ -165,7 +165,8 @@ for i in range(numEpochs):
        feed[x] = batchImages
        feed[y] = batchLabels
 
-       sess.run(trainStep, feed_dict=feed)
+       tmp, lossCur = sess.run([trainStep, loss], feed_dict=feed)
+       print('Loss current = ' + str(lossCur))
 #       if j % 30 == 0:
 #           dt.writeJPEGGivenGraph('/scratch/ianran/img2/' + str(i) + '-' + str(j),
 #                sess, jpegOp)
@@ -176,7 +177,7 @@ for i in range(numEpochs):
       #    str(validate(validLabelsFull, validImagesFull, numBatch, sess)))
       testNetwork(validLabelsFull, validImagesFull, numBatch, sess)
    if i % 6 == 5 or i == (numEpochs - 1):
-       saver.save(sess, '../../models/cnn6', global_step=i)
+       saver.save(sess, '../../models/cnn7', global_step=i)
 
 ####################### After training.
 
