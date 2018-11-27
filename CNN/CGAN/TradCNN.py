@@ -22,7 +22,7 @@ output, trainPhase, trainableVars, otherVars = cgan.CNN_Network(x, numOutputClas
 
 y = tf.placeholder(tf.float32, shape=[None, numOutputClasses])
 
-jpegOp = dt.jpegGraph(x[0])
+#jpegOp = dt.jpegGraph(x[0])
 
 
 ####################### define accuracy, and encode functions
@@ -150,8 +150,8 @@ def testNetwork(labels, images, batchSize, sess):
 feed = {trainPhase: True}
 
 # get next batch of images
-batchImages = np.empty((numBatch,imageShape[0],imageShape[1],imageShape[2]), np.float16))
-batchLabels = np.zeros((numBatch, 2), np.float16))
+batchImages = np.empty((numBatch,imageShape[0],imageShape[1],imageShape[2]), np.float16)
+batchLabels = np.zeros((numBatch, 2), np.float16)
 
 for i in range(numEpochs):
    numBatchesPerEpoch, epochTuple = dt.generateEpoch(len(trainImagesPeople), \
@@ -166,9 +166,9 @@ for i in range(numEpochs):
        feed[y] = batchLabels
 
        sess.run(trainStep, feed_dict=feed)
-       if j % 30 == 0:
-           dt.writeJPEGGivenGraph('/scratch/ianran/img2/' + str(i) + '-' + str(j),
-                sess, jpegOp)
+#       if j % 30 == 0:
+#           dt.writeJPEGGivenGraph('/scratch/ianran/img2/' + str(i) + '-' + str(j),
+#                sess, jpegOp)
 
    ######### validate network and save model
    if (i % 3 == 0 or i == (numEpochs - 1)):

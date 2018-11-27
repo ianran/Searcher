@@ -25,8 +25,8 @@ def batchNormLayer(x, numChannels, num, trainPhase, filtType='conv', decayRate =
     # assumed to be convlution filter
 
     #define weight variables
-    gamma = tf.get_variable('gamma' + str(num), [numChannels], initializer=gammaInit)
-    beta = tf.get_variable('beta' + str(num), [numChannels], initializer=betaInit)
+    gamma = tf.get_variable('gamma' + str(num), [numChannels], initializer=gammaInit, dtype=tf.float16)
+    beta = tf.get_variable('beta' + str(num), [numChannels], initializer=betaInit, dtype=tf.float16)
 
     axes = []
     if filtType == 'mult':
@@ -71,9 +71,9 @@ def convLayer(x, filterShape, poolShape, trainPhase):
     inputChannels = x.shape[3]
     convFilt = tf.get_variable('filt' + str(numLayers), \
         [filterShape[0], filterShape[1], inputChannels, filterShape[2]], \
-        initializer=normInit)
+        initializer=normInit, dtype=tf.float16)
     bias = tf.get_variable('bias' + str(numLayers), \
-        [filterShape[2]], initializer=zeroInit)
+        [filterShape[2]], initializer=zeroInit, dtype=tf.float16)
 
     # setup layer conv, batch norm, and pooling layers.
     logit = tf.nn.conv2d(x, convFilt, strides=[1,1,1,1], padding='SAME') + bias
@@ -131,9 +131,9 @@ def fullConnLayer(x, numOutputNodes, trainPhase):
     inputChannels = x.shape[1]
 
     matFilt = tf.get_variable('filt' + str(numLayers), \
-        [inputChannels, numOutputNodes], initializer=normInit)
+        [inputChannels, numOutputNodes], initializer=normInit, dtype=tf.float16)
     bias = tf.get_variable('bias' + str(numLayers), \
-        [numOutputNodes], initializer=zeroInit)
+        [numOutputNodes], initializer=zeroInit, dtype=tf.float16)
 
     logit = tf.matmul(x, matFilt) + bias
     normed, gamma, beta, mean, variance = \
