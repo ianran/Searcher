@@ -170,7 +170,9 @@ def CNN_Network(disInput, numOutputClasses):
         outputDis, trainableVars, otherVars = cnn.fullConnLayer(flattenedDis, numOutputClasses, trainPhaseDis)
         disTrainableVars += trainableVars
         disOtherVars += otherVars
-    return outputDis, trainPhaseDis, disTrainableVars, disOtherVars
+
+        output32 = tf.to_float(outputDis)
+    return output32, trainPhaseDis, disTrainableVars, disOtherVars
 
 # discrimatveNetwork
 # This creates the network for the discrimatve side for an MNIST image

@@ -19,8 +19,8 @@ import tensorflow as tf
 # filtType - the type of filter (conv, mult)
 def batchNormLayer(x, numChannels, num, trainPhase, filtType='conv', decayRate = 0.99):
     # define the batch norm function for use.
-    betaInit = tf.zeros_initializer(dtype=tf.float32)
-    gammaInit = tf.ones_initializer(dtype=tf.float32)
+    betaInit = tf.zeros_initializer(dtype=tf.float16)
+    gammaInit = tf.ones_initializer(dtype=tf.float16)
 
     # assumed to be convlution filter
 
@@ -56,8 +56,8 @@ def batchNormLayer(x, numChannels, num, trainPhase, filtType='conv', decayRate =
 
 numLayers = 0
 # Define variable initilization
-normInit = tf.truncated_normal_initializer(0, .05, dtype=tf.float32)
-zeroInit = tf.constant_initializer(0.0, dtype=tf.float32)
+normInit = tf.truncated_normal_initializer(0, .05, dtype=tf.float16)
+zeroInit = tf.constant_initializer(0.0, dtype=tf.float16)
 
 # convLayer
 # define convolutional layer with batch normalization, and max pooling

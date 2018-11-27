@@ -108,10 +108,10 @@ def readDataNormalized():
     totalImages = totalImagesClass[0] + totalImagesClass[1]
 
     trainImagesPeople = np.empty((int(totalImagesClass[1]),trainImages.shape[1], \
-        trainImages.shape[2], trainImages.shape[3]))
+        trainImages.shape[2], trainImages.shape[3]), np.float16)
 
     trainImagesNoPeople = np.empty((int(totalImagesClass[0]),trainImages.shape[1], \
-        trainImages.shape[2], trainImages.shape[3]))
+        trainImages.shape[2], trainImages.shape[3]), np.float16)
 
     iPeople = 0
     iNoPeople = 0
