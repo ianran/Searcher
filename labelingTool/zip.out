@@ -98,6 +98,8 @@ work dangit again
 1760
 1780
 1800
-(1818, 405, 720, 3)
-(1818, 2)
+Traceback (most recent call last):
+  File "FeedImagesToNumpyZip.py", line 86, in <module>
+    label = labels[filename]
+KeyError: 'Animas2_0015-00030.jpg'
 Finished running program

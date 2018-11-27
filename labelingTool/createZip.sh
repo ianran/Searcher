@@ -25,7 +25,7 @@ echo "/home/ianran/Searcher/labelingTool/FeedImagesToNumpyZip.py"
 
 #sh t.sh
 
-sh run.sh /home/ianran/feed/
+sh run.sh /home/ianran/Searcher/labelingTool/feed/
 
 #python /home/ianran/Searcher/labelingTool/FeedImagesToNumpyZip.py /home/ianran/feed/ /home/ianran/Searcher/labelingTool/labels.csv 1
 
