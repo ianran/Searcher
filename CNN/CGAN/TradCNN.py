@@ -64,8 +64,7 @@ sess = tf.Session()
 sess.run(tf.global_variables_initializer())
 
 numEpochs = 50
-numDisc = 5
-numBatch = 35
+numBatch = 60
 
 
 # Validation network
