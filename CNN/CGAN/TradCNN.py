@@ -22,7 +22,7 @@ output, trainPhase, trainableVars, otherVars = cgan.CNN_Network(x, numOutputClas
 
 y = tf.placeholder(tf.float32, shape=[None, numOutputClasses])
 
-#jpegOp = dt.jpegGraph(x[0])
+jpegOp = dt.jpegGraph(x[0])
 
 
 ####################### define accuracy, and encode functions
@@ -156,20 +156,26 @@ batchLabels = np.zeros((numBatch, 2), np.float16)
 for i in range(numEpochs):
    numBatchesPerEpoch, epochTuple = dt.generateEpoch(len(trainImagesPeople), \
         len(trainImagesNoPeople), numBatch)
+   print('epoch indcies = ')
+   print(epochTuple[0])
+   print('epochSelector = ')
+   print(epochTuple[1])
+
    k = 0
    print('EPOCH = ' + str(i) + ' with ' + str(numBatchesPerEpoch) + ' batches')
    for j in range(numBatchesPerEpoch):
        print('\tepoch batch = ' + str(j))
        bk = dt.getNextBatchEpoch(k, epochTuple, numBatch, \
             trainImagesPeople, trainImagesNoPeople, batchImages, batchLabels)
+       print('k = ' + str(k))
        feed[x] = batchImages
        feed[y] = batchLabels
 
        tmp, lossCur = sess.run([trainStep, loss], feed_dict=feed)
        print('Loss current = ' + str(lossCur))
-#       if j % 30 == 0:
-#           dt.writeJPEGGivenGraph('/scratch/ianran/img2/' + str(i) + '-' + str(j),
-#                sess, jpegOp)
+       if j % 30 == 0:
+           dt.writeJPEGGivenGraph('/scratch/ianran/img2/' + str(i) + '-' + str(j) + '.jpg',
+                sess, jpegOp)
 
    ######### validate network and save model
    if (i % 3 == 0 or i == (numEpochs - 1)):
@@ -177,7 +183,7 @@ for i in range(numEpochs):
       #    str(validate(validLabelsFull, validImagesFull, numBatch, sess)))
       testNetwork(validLabelsFull, validImagesFull, numBatch, sess)
    if i % 6 == 5 or i == (numEpochs - 1):
-       saver.save(sess, '../../models/cnn7', global_step=i)
+       saver.save(sess, '../../models/cnn8', global_step=i)
 
 ####################### After training.
 
