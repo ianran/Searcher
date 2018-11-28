@@ -199,7 +199,7 @@ for i in range(numEpochs):
       testNetwork(batchLabels, batchImages, numBatch, sess)
 
    if i % 6 == 5 or i == (numEpochs - 1):
-       saver.save(sess, '../../models/cnn9', global_step=i)
+       saver.save(sess, '../../models/cnn10', global_step=i)
 
 ####################### After training.
 
