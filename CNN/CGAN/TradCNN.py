@@ -170,8 +170,12 @@ for i in range(numEpochs):
        feed[x] = batchImages
        feed[y] = batchLabels
 
-       tmp, lossCur = sess.run([trainStep, loss], feed_dict=feed)
+       tmp, lossCur, outputVec, crossVec = sess.run([trainStep, loss, output, crossEntropy], feed_dict=feed)
        print('Loss current = ' + str(lossCur))
+       print('OutputVector = ')
+       print(outputVec)
+       print('cross vector = ')
+       print(crossVec)
        if j % 30 == 0:
            dt.write_jpeg('/scratch/ianran/img2/' + str(i) + '-' + str(j) + '.jpg', \
                 batchImages[0],imageShape)
