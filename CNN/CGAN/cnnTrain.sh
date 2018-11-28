@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --job-name trad3
-#SBATCH --output cnn4.out
+#SBATCH --job-name conv2
+#SBATCH --output cnn5-2.out
 #SBATCH --partition gpu
 #SBATCH --nodes 1
 #SBATCH --ntasks 1
