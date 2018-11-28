@@ -163,10 +163,10 @@ for i in range(numEpochs):
    k = 0
    print('EPOCH = ' + str(i) + ' with ' + str(numBatchesPerEpoch) + ' batches')
    for j in range(numBatchesPerEpoch):
-       print('\tepoch batch = ' + str(j))
+       print('epoch batch = ' + str(j))
        k = dt.getNextBatchEpoch(k, epochTuple, numBatch, \
             trainImagesPeople, trainImagesNoPeople, batchImages, batchLabels)
-       print('k = ' + str(k))
+       #print('k = ' + str(k))
        feed[x] = batchImages
        feed[y] = batchLabels
 
