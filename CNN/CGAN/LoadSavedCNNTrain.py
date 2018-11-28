@@ -61,7 +61,10 @@ trainImagesPeople, trainImagesNoPeople, validImagesFull, validLabelsFull \
 
 sess = tf.Session()
 
-sess.run(tf.global_variables_initializer())
+#sess.run(tf.global_variables_initializer())
+# Load in tensor flow model from previous training
+'../../models/cnn9'
+saver.restore(sess, s)
 
 numEpochs = 100
 numBatch = 40
@@ -199,7 +202,7 @@ for i in range(numEpochs):
       testNetwork(batchLabels, batchImages, numBatch, sess)
 
    if i % 6 == 5 or i == (numEpochs - 1):
-       saver.save(sess, '../../models/cnn9', global_step=i)
+       saver.save(sess, '../../models/cnn11', global_step=i)
 
 ####################### After training.
 
