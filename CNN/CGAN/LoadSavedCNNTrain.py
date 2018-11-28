@@ -53,8 +53,7 @@ trainStep = optimizer.minimize(loss, var_list=trainableVars)
 # read in data
 #trainImagesFull, trainLabelsFull, validImagesFull, validLabelsFull \
 #      = dt.readData()
-trainImagesPeople, trainImagesNoPeople, validImagesFull, validLabelsFull \
-    = dt.readDataNormalized()
+
 
 
 ########################## Training
@@ -63,11 +62,16 @@ sess = tf.Session()
 
 #sess.run(tf.global_variables_initializer())
 # Load in tensor flow model from previous training
-'../../models/cnn9'
-saver.restore(sess, s)
+saver.restore(sess, '../../models/cnn10-99')
+
+print('Starting reading in dataset')
+trainImagesPeople, trainImagesNoPeople, validImagesFull, validLabelsFull \
+    = dt.readDataNormalized()
+print('Completed reading in dataset')
 
 numEpochs = 100
 numBatch = 40
+
 
 
 # Validation network
