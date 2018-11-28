@@ -18,7 +18,8 @@ randomVecSize = 256
 print(imageShape)
 
 x = tf.placeholder(tf.float32, shape=[None, imageShape[0], imageShape[1], imageShape[2]])
-output, trainPhase, trainableVars, otherVars = cgan.CNN_Network(x, numOutputClasses)
+#output, trainPhase, trainableVars, otherVars = cgan.CNN_Network(x, numOutputClasses)
+output, trainPhase, trainableVars, otherVars = cgan.CNN_NetworkLarge(x, numOutputClasses)
 
 y = tf.placeholder(tf.float32, shape=[None, numOutputClasses])
 
@@ -63,8 +64,8 @@ sess = tf.Session()
 
 sess.run(tf.global_variables_initializer())
 
-numEpochs = 50
-numBatch = 60
+numEpochs = 100
+numBatch = 40
 
 
 # Validation network
@@ -161,6 +162,7 @@ for i in range(numEpochs):
    print(epochTuple[1])
 
    k = 0
+   lossTotal = 0.0
    print('EPOCH = ' + str(i) + ' with ' + str(numBatchesPerEpoch) + ' batches')
    for j in range(numBatchesPerEpoch):
        print('epoch batch = ' + str(j))
@@ -171,18 +173,22 @@ for i in range(numEpochs):
        feed[y] = batchLabels
 
        tmp, lossCur, outputVec, crossVec = sess.run([trainStep, loss, output, crossEntropy], feed_dict=feed)
-       print('Loss current = ' + str(lossCur))
-       print('OutputVector = ')
-       print(outputVec)
-       print('cross vector = ')
-       print(crossVec)
+       lossTotal += lossCur
+       #print('Loss current = ' + str(lossCur))
+       #print('OutputVector = ')
+       #print(outputVec)
+       #print('cross vector = ')
+       #print(crossVec)
        if j % 30 == 0:
            dt.write_jpeg('/scratch/ianran/img2/' + str(i) + '-' + str(j) + '.jpg', \
                 batchImages[0],imageShape)
+           print('This set of batch labels')
+           print(batchLabels)
            #dt.writeJPEGGivenGraph('/scratch/ianran/img2/' + str(i) + '-' + str(j) + '.jpg',
             #    sess, jpegOp)
 
    ######### validate network and save model
+   print('Epoch total loss = ' + str(lossTotal))
    if (i % 3 == 0 or i == (numEpochs - 1)):
       #print('Validation accuracy = ' + \
       #    str(validate(validLabelsFull, validImagesFull, numBatch, sess)))
@@ -194,7 +200,7 @@ for i in range(numEpochs):
       testNetwork(batchLabels, batchImages, numBatch, sess)
 
    if i % 6 == 5 or i == (numEpochs - 1):
-       saver.save(sess, '../../models/cnn8', global_step=i)
+       saver.save(sess, '../../models/cnn9', global_step=i)
 
 ####################### After training.
 

@@ -174,6 +174,117 @@ def CNN_Network(disInput, numOutputClasses):
         #output32 = tf.cast(outputDis, tf.float32)
     return outputDis, trainPhaseDis, disTrainableVars, disOtherVars
 
+
+
+# CNN_Network
+# Generates a fairly standard discrimatve CNN for generic classification
+# of 420,705,3 images.
+# @param disInput - the input to the network.
+#
+# @return
+def CNN_NetworkLarge(disInput, numOutputClasses):
+    trainPhaseDis = tf.placeholder(tf.bool)
+
+    disTrainableVars = []
+    disOtherVars = []
+    with tf.variable_scope('discrimitive'):
+        # convolutional
+        # (405,720)
+        print('Discrimitive network')
+        print(disInput)
+        disImg1, trainableVars, otherVars = cnn.convLayer(disInput, [5,5,16], [3,3], trainPhaseDis)
+        disTrainableVars += trainableVars
+        disOtherVars += otherVars
+
+        print(disImg1)
+
+        # (135,240)
+        disImg2, trainableVars, otherVars = cnn.convLayer(disImg1, [5,5,64], [1,1], trainPhaseDis)
+        disTrainableVars += trainableVars
+        disOtherVars += otherVars
+        print(disImg2)
+
+        # (135, 240)
+        disImg21, trainableVars, otherVars = cnn.convLayer(disImg2, [1,1,64], [1,1], trainPhaseDis)
+        disTrainableVars += trainableVars
+        disOtherVars += otherVars
+        print(disImg21)
+
+        # (135, 240)
+        disImg22, trainableVars, otherVars = cnn.convLayer(disImg21, [3,3,64], [3,3], trainPhaseDis)
+        disTrainableVars += trainableVars
+        disOtherVars += otherVars
+        print(disImg22)
+
+
+        # (45, 80, 64)
+        disImg31, trainableVars, otherVars = cnn.convLayer(disImg22, [7,7,128], [1,1], trainPhaseDis)
+        disTrainableVars += trainableVars
+        disOtherVars += otherVars
+        print(disImg31)
+
+        # (45, 80, 128)
+        disImg32, trainableVars, otherVars = cnn.convLayer(disImg31, [3,3,128], [1,1], trainPhaseDis)
+        disTrainableVars += trainableVars
+        disOtherVars += otherVars
+        print(disImg32)
+
+        # (45, 80)
+        disImg3, trainableVars, otherVars = cnn.convLayer(disImg2, [3,3,128], [3,3], trainPhaseDis)
+        disTrainableVars += trainableVars
+        disOtherVars += otherVars
+        print(disImg3)
+
+        # (15, 27,128)
+        disImg41, trainableVars, otherVars = cnn.convLayer(disImg3, [3,3,256], [1,1], trainPhaseDis)
+        disTrainableVars += trainableVars
+        disOtherVars += otherVars
+        print(disImg41)
+
+        # (15, 27,128)
+        disImg42, trainableVars, otherVars = cnn.convLayer(disImg41, [1,1,128], [1,1], trainPhaseDis)
+        disTrainableVars += trainableVars
+        disOtherVars += otherVars
+        print(disImg42)
+
+        # (15, 27,128)
+        disImg43, trainableVars, otherVars = cnn.convLayer(disImg42, [3,3,256], [1,1], trainPhaseDis)
+        disTrainableVars += trainableVars
+        disOtherVars += otherVars
+        print(disImg43)
+
+        # (15, 27)
+        disImg4, trainableVars, otherVars = cnn.convLayer(disImg43, [5,5,32], [3,3], trainPhaseDis)
+        disTrainableVars += trainableVars
+        disOtherVars += otherVars
+
+        print(disImg4)
+
+        # (5, 9)
+        #disImg5, trainableVars, otherVars = cnn.convLayer(disImg4, [5,5,32], [3,3], trainPhaseDis)
+        #disTrainableVars += trainableVars
+        #disOtherVars += otherVars
+
+        # (1440)
+        #print(disImg5)
+
+        ################################## Flattened discrimatve
+        flattenedDis = tf.reshape(disImg4, shape=[-1, 1440])
+
+        print(flattenedDis)
+
+        fc1, trainableVars, otherVars = cnn.fullConnLayer(flattenedDis, 720, trainPhaseDis)
+        disTrainableVars += trainableVars
+        disOtherVars += otherVars
+        outputDis, trainableVars, otherVars = cnn.fullConnLayer(flattenedDis, numOutputClasses, trainPhaseDis)
+        disTrainableVars += trainableVars
+        disOtherVars += otherVars
+
+        #output32 = tf.cast(outputDis, tf.float32)
+    return outputDis, trainPhaseDis, disTrainableVars, disOtherVars
+
+
+
 # discrimatveNetwork
 # This creates the network for the discrimatve side for an MNIST image
 # 2 fully connected layers followed by 3 convolutional layers.
