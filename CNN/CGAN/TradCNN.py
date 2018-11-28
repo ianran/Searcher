@@ -17,7 +17,7 @@ numOutputClasses = 2
 randomVecSize = 256
 print(imageShape)
 
-x = tf.placeholder(tf.float16, shape=[None, imageShape[0], imageShape[1], imageShape[2]])
+x = tf.placeholder(tf.float32, shape=[None, imageShape[0], imageShape[1], imageShape[2]])
 output, trainPhase, trainableVars, otherVars = cgan.CNN_Network(x, numOutputClasses)
 
 y = tf.placeholder(tf.float32, shape=[None, numOutputClasses])
@@ -44,7 +44,7 @@ print(loss)
 saver = tf.train.Saver(trainableVars + otherVars)
 
 # discrimitive optimizer
-optimizer = tf.train.AdamOptimizer(learning_rate=0.005)
+optimizer = tf.train.AdamOptimizer(learning_rate=0.01)
 trainStep = optimizer.minimize(loss, var_list=trainableVars)
 
 
@@ -149,8 +149,8 @@ def testNetwork(labels, images, batchSize, sess):
 feed = {trainPhase: True}
 
 # get next batch of images
-batchImages = np.empty((numBatch,imageShape[0],imageShape[1],imageShape[2]), np.float16)
-batchLabels = np.zeros((numBatch, 2), np.float16)
+batchImages = np.empty((numBatch,imageShape[0],imageShape[1],imageShape[2]), np.float32)
+batchLabels = np.zeros((numBatch, 2), np.float32)
 
 for i in range(numEpochs):
    numBatchesPerEpoch, epochTuple = dt.generateEpoch(len(trainImagesPeople), \

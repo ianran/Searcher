@@ -19,7 +19,7 @@ import random
 #
 # @returns the operation object for creating the jpeg.
 def jpegGraph(image):
-    scaledImage = tf.cast(image * tf.constant(255.0, dtype=tf.float16), dtype=tf.uint8)
+    scaledImage = tf.cast(image * tf.constant(255.0, dtype=tf.float32), dtype=tf.uint8)
     op = tf.image.encode_jpeg(scaledImage, format='rgb', quality=100)
     return op
 
@@ -109,10 +109,10 @@ def readDataNormalized():
     totalImages = totalImagesClass[0] + totalImagesClass[1]
 
     trainImagesPeople = np.empty((int(totalImagesClass[1]),trainImages.shape[1], \
-        trainImages.shape[2], trainImages.shape[3]), np.float16)
+        trainImages.shape[2], trainImages.shape[3]), np.float32)
 
     trainImagesNoPeople = np.empty((int(totalImagesClass[0]),trainImages.shape[1], \
-        trainImages.shape[2], trainImages.shape[3]), np.float16)
+        trainImages.shape[2], trainImages.shape[3]), np.float32)
 
     iPeople = 0
     iNoPeople = 0

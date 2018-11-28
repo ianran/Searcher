@@ -19,14 +19,14 @@ import tensorflow as tf
 # filtType - the type of filter (conv, mult)
 def batchNormLayer(x, numChannels, num, trainPhase, filtType='conv', decayRate = 0.99):
     # define the batch norm function for use.
-    betaInit = tf.zeros_initializer(dtype=tf.float16)
-    gammaInit = tf.ones_initializer(dtype=tf.float16)
+    betaInit = tf.zeros_initializer(dtype=tf.float32)
+    gammaInit = tf.ones_initializer(dtype=tf.float32)
 
     # assumed to be convlution filter
 
     #define weight variables
-    gamma = tf.get_variable('gamma' + str(num), [numChannels], initializer=gammaInit, dtype=tf.float16)
-    beta = tf.get_variable('beta' + str(num), [numChannels], initializer=betaInit, dtype=tf.float16)
+    gamma = tf.get_variable('gamma' + str(num), [numChannels], initializer=gammaInit, dtype=tf.float32)
+    beta = tf.get_variable('beta' + str(num), [numChannels], initializer=betaInit, dtype=tf.float32)
 
     axes = []
     if filtType == 'mult':
@@ -56,8 +56,8 @@ def batchNormLayer(x, numChannels, num, trainPhase, filtType='conv', decayRate =
 
 numLayers = 0
 # Define variable initilization
-normInit = tf.truncated_normal_initializer(0, .05, dtype=tf.float16)
-zeroInit = tf.constant_initializer(0.0, dtype=tf.float16)
+normInit = tf.truncated_normal_initializer(0, .05, dtype=tf.float32)
+zeroInit = tf.constant_initializer(0.0, dtype=tf.float32)
 
 # convLayer
 # define convolutional layer with batch normalization, and max pooling
@@ -71,9 +71,9 @@ def convLayer(x, filterShape, poolShape, trainPhase):
     inputChannels = x.shape[3]
     convFilt = tf.get_variable('filt' + str(numLayers), \
         [filterShape[0], filterShape[1], inputChannels, filterShape[2]], \
-        initializer=normInit, dtype=tf.float16)
+        initializer=normInit, dtype=tf.float32)
     bias = tf.get_variable('bias' + str(numLayers), \
-        [filterShape[2]], initializer=zeroInit, dtype=tf.float16)
+        [filterShape[2]], initializer=zeroInit, dtype=tf.float32)
 
     # setup layer conv, batch norm, and pooling layers.
     logit = tf.nn.conv2d(x, convFilt, strides=[1,1,1,1], padding='SAME') + bias
@@ -131,9 +131,9 @@ def fullConnLayer(x, numOutputNodes, trainPhase):
     inputChannels = x.shape[1]
 
     matFilt = tf.get_variable('filt' + str(numLayers), \
-        [inputChannels, numOutputNodes], initializer=normInit, dtype=tf.float16)
+        [inputChannels, numOutputNodes], initializer=normInit, dtype=tf.float32)
     bias = tf.get_variable('bias' + str(numLayers), \
-        [numOutputNodes], initializer=zeroInit, dtype=tf.float16)
+        [numOutputNodes], initializer=zeroInit, dtype=tf.float32)
 
     logit = tf.matmul(x, matFilt) + bias
     normed, gamma, beta, mean, variance = \

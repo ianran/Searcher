@@ -171,8 +171,8 @@ def CNN_Network(disInput, numOutputClasses):
         disTrainableVars += trainableVars
         disOtherVars += otherVars
 
-        output32 = tf.to_float(outputDis)
-    return output32, trainPhaseDis, disTrainableVars, disOtherVars
+        #output32 = tf.cast(outputDis, tf.float32)
+    return outputDis, trainPhaseDis, disTrainableVars, disOtherVars
 
 # discrimatveNetwork
 # This creates the network for the discrimatve side for an MNIST image
