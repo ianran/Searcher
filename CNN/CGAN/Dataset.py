@@ -242,7 +242,6 @@ def getNextBatchEpoch(i, epochTuple, batchSize, \
     #batchImages = np.empty((batchSize,size[0],size[1],size[2]))
     #batchLabels = np.zeros((batchSize, numOutputClasses))
 
-    print('batchSize = ' + str(batchSize))
     for j in range(batchSize):
         if epochTuple[1][i] == 1:
             # people
