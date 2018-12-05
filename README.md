@@ -2,9 +2,31 @@
 
 Searcher is a project to aid search and rescue operations by autonomously flying an unmanned vehicle and detect where a person is. Unmanned Aerial Vehicles (UAVs) are already in use by search and rescue teams to search for people in hard to reach locations, but all of their drones require somebody to actively fly and watch video feed. We propose a system that autonomously flies and determines if a person is in the search area using machine vision and machine learning. We plan on using a drone for this project with a camera, and possibly an infrared camera to pick up heat signatures. Basic success would require developing an algorithm which would automatically detect if there is a person in a aerial image with 80% TPR and 10% FPR, and integrate the algorithm into a drone in near real-time. Near real-time is defined as the processing of frames coming once every few seconds, which would still be possible and useful if the UAV is flying fairly slowly. Stretch goals would be to have multiple autonomous UAVs working together to search for a person with very high accuracy, ~95% with few false positives. Also, adding a feature that would allow the human operators to verify if a person identified by the system is the person they are looking for.
 
-Folders:
+## Folders:
 
 ### CNN - Has code for CNN networks and training.
+#### CGAN - latest code for both traditional CNN and CGAN.
+
+CGAN.py - train cgan for MNIST
+
+CGANetwork.py - Contains final network code for all CNN and CGAN network for actual dataset.
+
+CGANetworkMNIST.py - Same as above but only for MNIST.
+
+CGANReadData.py - train CGAN for real data.
+
+CNNUtility.py - Utility functions for CNN generation.
+
+Dataset.py - Code to read in dataset from numpy zip and filter for unbiased epochs.
+
+LoadSavedCNNTrain.py - Same as TradCNN.py, but loading saved network file for training further.
+
+TradCNN.py - entry point for final 11 layer traditional CNN used.
+
+#### CNN - old code for traditional CNN.
+
+
+
 Includes both an older CNN and the latest traditional CNN and CGAN code in folder called CGAN.
 
 
@@ -36,14 +58,14 @@ videoExtractor.sh - a bash script file to allow easy extraction of images from a
 ### UI - user interface code for displaying images after processing
 
 
-List of video files:
-## AMountain videos
+## List of video files:
+#### AMountain videos
 
 AMountain1.MOV - labeled
 
 AMountain2.MOV - labeled
 
-## Animas1 video
+#### Animas1 video
 
 Animas1_0004.MOV - labeled
 
@@ -51,11 +73,11 @@ Animas1_0008.MOV - Labeled
 
 Animas1_0009.MOV - labeled
 
-## AnimasV2 video
+#### AnimasV2 video
 
 AnimasV2???? (Must be on my desktop only???)
 
-## Cascade Creek Video
+#### Cascade Creek Video
 
 CascadeCreek_0001.MOV - labeled
 
@@ -63,21 +85,21 @@ CascadeCreek_0002.MOV - labeled
 
 CascadeCreek_0003.MOV - labeled
 
-## FallsCreek Video (lots of data)
+#### FallsCreek Video (lots of data)
 
 FallsCreek_0012.MOV - labeled
 
 FallsCreek_0014.MOV - labeled
 
 
-## GrassyField Videos (Should be renamed before being labeled to avoid naming conflicts)
+#### GrassyField Videos (Should be renamed before being labeled to avoid naming conflicts)
 
 xxxxxx_0003.MOV - labeled
 
 xxxxxx_0009.MOV - labeled
 
 
-## HorseShoeData
+#### HorseShoeData
 
 DJI_0001.MOV - Don't Bother (or label as all not people)
 
@@ -99,7 +121,7 @@ DJI_0012.MOV - Don't bother
 
 DJI_0013.MOV - Don't bother
 
-## Narnia Data
+#### Narnia Data
 
 DJI_0014.MOV - labeled
 
@@ -111,7 +133,7 @@ DJI_0017.MOV - don't bother
 
 DJI_0018.MOV - labeled
 
-## StochajData
+#### StochajData
 
 DJI_0040.MOV - labeled
 

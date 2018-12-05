@@ -1,7 +1,7 @@
 # TradCNN.py
 # Written Ian Rankin September 2018
 #
-# This is just a traditonal CNN
+# This is just a traditonal 11 layer CNN training.
 
 import numpy as np
 import tensorflow as tf

@@ -1,7 +1,7 @@
 # Dataset.py
 # Written Ian Rankin October 2018
 #
-# Read in the dataset
+# Read in the dataset with epoch balancing code for unbiased training.
 
 import tensorflow as tf
 import numpy as np

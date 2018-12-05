@@ -1,7 +1,7 @@
 # TradCNN.py
 # Written Ian Rankin September 2018
 #
-# This is just a traditonal CNN
+# Load saved CNN model, and retrain for a while.
 
 import numpy as np
 import tensorflow as tf
