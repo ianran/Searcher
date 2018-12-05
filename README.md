@@ -57,6 +57,7 @@ videoExtractor.sh - a bash script file to allow easy extraction of images from a
 
 ### UI - user interface code for displaying images after processing
 
+### Waypoint Generation - Waypoint generation code before being placed into app.
 
 ## List of video files:
 #### AMountain videos
