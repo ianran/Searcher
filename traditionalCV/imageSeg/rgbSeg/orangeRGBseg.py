@@ -34,7 +34,7 @@ class OrangeSegRGB:
 		"""initializes all values to presets or None if need to be set
 		"""
 
-		self.__rgb_threshold_red = [178.86690647482015, 255.0]
+		self.__rgb_threshold_red = [179.86690647482015, 255.0]
 		self.__rgb_threshold_green = [0.0, 160.55555555555554]
 		self.__rgb_threshold_blue = [0.0, 212.07070707070707]
 
@@ -106,6 +106,12 @@ def findRates(true, pred):
 		# True negative
 		elif true.get(fName) == 'noPeople' and pred.get(fName) == False:
 			tn += 1
+	
+	print('TP = ', tp)
+	print('FP = ', fp)
+	print('TN = ', tn)
+	print('FN = ', fn)
+
 
 	# Calculate true positive rate
 	tpr = tp / (tp + fn)
@@ -135,7 +141,7 @@ def findRates(true, pred):
 #	highImg -- RGB highlighted iamge matrix
 def POI(img, segImg):
 	im2, contours, hierarchy = cv2.findContours(segImg, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-	highImg = cv2.drawContours(img, contours, -1, (0,0,255), 2)
+	highImg = cv2.drawContours(img, contours, -1, (0,0,255), 4)
 
 	return highImg
 
@@ -176,7 +182,7 @@ seg = OrangeSegRGB()
 
 
 # Threshold
-thres = 20
+thres = 10
 
 
 # Create progress bar for image segmentation
@@ -186,7 +192,7 @@ print('Segmentation progress:')
 
 # Read images one at a time and put them through color segmentation.
 i = 0
-for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
+for fName in prog1(glob.glob(imgDir + '*.JPG')):
 	# Key for label dict is image name
 	fNameSplit = fName.split('/')
 	key = fNameSplit[len(fNameSplit)-1]
@@ -231,4 +237,4 @@ print('')
 
 
 # Add path for predicted orange images
-display.addImgFiles(glob.glob(predDir + '*.jpg'))
+display.addImgFiles(glob.glob(predDir + '*.JPG'))

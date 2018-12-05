@@ -30,10 +30,9 @@ class OrangeSegRGB:
 		"""initializes all values to presets or None if need to be set
 		"""
 
-		self.__rgb_threshold_red = [178.86690647482015, 255.0]
-		self.__rgb_threshold_green = [0.0, 160.55555555555554]
-		self.__rgb_threshold_blue = [0.0, 212.07070707070707]
-
+		self.__rgb_threshold_red = [180, 255]
+		self.__rgb_threshold_green = [0.0, 150]
+		self.__rgb_threshold_blue = [0.0, 110]
 		self.rgb_threshold_output = None
 
 
@@ -118,7 +117,7 @@ def findTPRandFPR(true, pred, numThres):
 # check if all arguments are given, and output usage if not
 if (len(sys.argv) != 3):
 	# print usage, and exit program
-	print("USAGE: python orangeSegSweepRGB [imgDir] [csvFile]")
+	print("USAGE: python3 orangeSegSweepRGB [imgDir] [csvFile]")
 	sys.exit()
 #end if
 
@@ -154,7 +153,8 @@ prog1  = ProgressBar()
 
 
 # Read images one at a time and put them through color segmentation.
-for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
+i = 0
+for fName in prog1(glob.glob(imgDir + '*.JPG')):
 	# Key for label dict is image name
 	fNameSplit = fName.split('/')
 	key = fNameSplit[len(fNameSplit)-1]
@@ -180,13 +180,14 @@ for fName in prog1(glob.glob(imgDir + '**/*.jpg')):
 		# Label as False
 		else:
 			orangeDict[key].append(False)
+	i += 1
 
 
 # Calculate ROC
 tpr,fpr = findTPRandFPR(labels, orangeDict, np.size(thres))
 
 print(tpr[1], fpr[1], thres[1])
-
+print('Num of images = ', i)
 # Plot ROC curve
 plt.figure()
 plt.plot(fpr, tpr, color='darkorange', lw=2, label='ROC curve', marker='o')
@@ -200,4 +201,4 @@ plt.xlabel('False Positive Rate')
 plt.ylabel('True Positive Rate')
 plt.title('RGB Receiver operating characteristic')
 plt.legend(loc="lower right")
-
+plt.show()

@@ -1,11 +1,11 @@
 #########################################################################################
-# finalOrangeSeg.py									#
+# orangeRGBseg.py									#
 #											#
 # Joellen Lansford									#
 #											#
-# This program reads in a directory of images, performs RGB segmentation on them, 	#
-# draws contours around orange pixels, moves images with orange pixels to a new 	#
-# directory, and displays the images with GPS coordinates				#
+# This program reads in a directory of images and a csv file of image labels, performs 	#
+# RGB segmentation on them, moves images with orange pixels to a new directory, 	#
+# displays the images with orange, and calculates TPR, FPR, TNR, and FNR.		#
 #########################################################################################
 import cv2
 import numpy as np
@@ -15,9 +15,6 @@ import matplotlib.image as mpimg
 import glob
 import shutil
 import scipy.misc
-import PIL.Image
-from PIL.ExifTags import TAGS
-import piexif
 import sys
 sys.path.append('../../../labelingTool/')
 sys.path.append('../../../UI/')
@@ -37,7 +34,7 @@ class OrangeSegRGB:
 		"""initializes all values to presets or None if need to be set
 		"""
 
-		self.__rgb_threshold_red = [178.86690647482015, 255.0]
+		self.__rgb_threshold_red = [17, 255.0]
 		self.__rgb_threshold_green = [0.0, 160.55555555555554]
 		self.__rgb_threshold_blue = [0.0, 212.07070707070707]
 
@@ -68,6 +65,74 @@ class OrangeSegRGB:
 		return cv2.inRange(input, (red[0], green[0], blue[0]),  (red[1], green[1], blue[1]))
 
 
+# Function to calculate True Positive, False Positive, True Negative, and False Negative Rate by counting number of true positives,
+# false positives, true negatives, and false negatives
+# Input:
+#	true -- Dictionary with true labels
+#	pred -- Dictionary with predicted labels
+# Output:
+#	tpr -- True positive rate
+# 	fpr -- False positive rate
+# 	tnr -- True negative rate
+# 	fnr -- False negative rate
+def findRates(true, pred):
+	# Create progress bar for finding rates
+	print('TPR and FPR progress:')
+	prog2 = ProgressBar()
+	
+	# Initialize rate arrays
+	tpr = 0.
+	fpr = 0.
+	tnr = 0.
+	fnr = 0.
+	
+	tp = 0.
+	fp = 0.
+	tn = 0.
+	fn = 0.
+	
+	# Go through each image's labels
+	for fName in prog2(pred.keys()):
+
+		# True positive
+		if true.get(fName) == 'people' and pred.get(fName) == True:
+			tp += 1
+		# False negative
+		elif true.get(fName) == 'people' and pred.get(fName) == False:
+			fn += 1
+		# False positive
+		elif true.get(fName) == 'noPeople' and pred.get(fName) == True:
+			fp += 1
+		# True negative
+		elif true.get(fName) == 'noPeople' and pred.get(fName) == False:
+			tn += 1
+	
+	print('TP = ', tp)
+	print('FP = ', fp)
+	print('TN = ', tn)
+	print('FN = ', fn)
+
+
+	# Calculate true positive rate
+	tpr = tp / (tp + fn)
+
+	# Calculate false positive rate
+	fpr = fp / (fp + tn)
+
+	# Calculate true negative rate
+	tnr = tn / (fp + tn)
+
+	# Calculate false negative rate
+	fnr = fn / (fn + tp)
+
+	print('TP = ', tp)
+	print('FP = ', fp)
+	print('TN = ', tn)
+	print('FN = ', fn)
+
+	return tpr, fpr, tnr, fnr
+
+
 # Function to find and draw contours of orange pixels found in images
 # Input:
 #	img -- RGB image matrix
@@ -76,26 +141,30 @@ class OrangeSegRGB:
 #	highImg -- RGB highlighted iamge matrix
 def POI(img, segImg):
 	im2, contours, hierarchy = cv2.findContours(segImg, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-	highImg = cv2.drawContours(img, contours, -1, (0,0,255), 10)
+	highImg = cv2.drawContours(img, contours, -1, (0,0,255), 4)
 
 	return highImg
 
 
 # check if all arguments are given, and output usage if not
-if (len(sys.argv) != 3):
+if (len(sys.argv) != 4):
 	# print usage, and exit program
-	print("USAGE: python3 finalOrangeSeg.py [imgDir] [predictedOrangeDir]")
+	print("USAGE: python orangeRGBseg.py [imgDir] [csvFile] [predOrange]")
 	sys.exit()
 #end if
 
 
 # define input arguments to variables
 imgDir = sys.argv[1]
-predDir = sys.argv[2]
+csvFile = sys.argv[2]
+predDir = sys.argv[3]
 
 
 # Dispalyer object initialization
 display = ImageDisplayer.ImageDisplayer()
+
+# Read in image labels
+labels = labelReader.readLabelsDict(csvFile)
 
 
 # Initialize dict for predicted labels
@@ -123,7 +192,7 @@ print('Segmentation progress:')
 
 # Read images one at a time and put them through color segmentation.
 i = 0
-for fName in prog1(glob.glob(imgDir + '*.JPG')):
+for fName in prog1(glob.glob(imgDir + '**/*.JPG')):
 	# Key for label dict is image name
 	fNameSplit = fName.split('/')
 	key = fNameSplit[len(fNameSplit)-1]
@@ -143,19 +212,10 @@ for fName in prog1(glob.glob(imgDir + '*.JPG')):
 	# Label as True and copy image to directory containing predicted orange pictures
 	if orangePixNum >= thres:
 		orangeDict[key] = True
-
-		# Draw contours around orange pixels
 		highImg = POI(img, segImg)
 		saveImg = cv2.cvtColor(highImg, cv2.COLOR_RGB2BGR)
 		cv2.imwrite(predDir + key, saveImg)
-
-		# Copy original image metadata to contoured image for image displayer
-		im = PIL.Image.open(fName)
-		exif_dict = piexif.load(im.info["exif"])
-		exif_bytes = piexif.dump(exif_dict)
-		im2 = PIL.Image.open(predDir + key)
-		im2.save(predDir + key, "jpeg", exif=exif_bytes)
-
+		#shutil.copyfile(fName, predDir + key)
 	# Label as False
 	else:
 		orangeDict[key] = False
@@ -163,7 +223,18 @@ for fName in prog1(glob.glob(imgDir + '*.JPG')):
 	i += 1
 
 print('')
-print('Num of images in dataset: ', i)
+print('Num of images: ', i)
+
+# Calculate True Positive Rate and False Positive Rate
+tpr,fpr,tnr,fnr = findRates(labels, orangeDict)
+
+print('')
+print('TPR = ', tpr)
+print('FPR = ', fpr)
+print('TNR = ', tnr)
+print('FNR = ', fnr)
+print('')
+
 
 # Add path for predicted orange images
 display.addImgFiles(glob.glob(predDir + '*.JPG'))
