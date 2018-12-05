@@ -60,7 +60,7 @@ trainStep = optimizer.minimize(loss, var_list=trainableVars)
 
 sess = tf.Session()
 
-#sess.run(tf.global_variables_initializer())
+sess.run(tf.global_variables_initializer())
 # Load in tensor flow model from previous training
 saver.restore(sess, '../../models/cnn10-99')
 
