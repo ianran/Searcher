@@ -241,7 +241,7 @@ def CNN_NetworkLarge(disInput, numOutputClasses):
         disOtherVars += otherVars
         print(disImg41)
 
-        # (15, 27,128)
+        # (15, 27,256)
         disImg42, trainableVars, otherVars = cnn.convLayer(disImg41, [1,1,128], [1,1], trainPhaseDis)
         disTrainableVars += trainableVars
         disOtherVars += otherVars
