@@ -1,22 +1,25 @@
-# Sarcasm
+# Searcher
+![Searcher Logo](SearcherLogoStandardBlack.png)
 
-Searcher is a project to aid search and rescue operations by autonomously flying an unmanned vehicle and detect where a person is. Unmanned Aerial Vehicles (UAVs) are already in use by search and rescue teams to search for people in hard to reach locations, but all of their drones require somebody to actively fly and watch video feed. We propose a system that autonomously flies and determines if a person is in the search area using machine vision and machine learning. We plan on using a drone for this project with a camera, and possibly an infrared camera to pick up heat signatures. Basic success would require developing an algorithm which would automatically detect if there is a person in a aerial image with some amount of precision about 75% accuracy, and integrate the algorithm into a drone in near real-time. Near real-time is defined as the processing of frames coming once every few seconds, which would still be possible and useful if the UAV is flying fairly slowly. Stretch goals would be to have multiple autonomous UAVs working together to search for a person with very high accuracy, ~95% with few false positives. Also, adding a feature that would allow the human operators to verify if a person identified by the system is the person they are looking for. The project will involve testing with a drone, which will require one.
+Searcher is a project to aid search and rescue operations by autonomously flying an unmanned vehicle and detect where a person is. Unmanned Aerial Vehicles (UAVs) are already in use by search and rescue teams to search for people in hard to reach locations, but all of their drones require somebody to actively fly and watch video feed. We propose a system that autonomously flies and determines if a person is in the search area using machine vision and machine learning. We plan on using a drone for this project with a camera, and possibly an infrared camera to pick up heat signatures. Basic success would require developing an algorithm which would automatically detect if there is a person in a aerial image with 80% TPR and 10% FPR, and integrate the algorithm into a drone in near real-time. Near real-time is defined as the processing of frames coming once every few seconds, which would still be possible and useful if the UAV is flying fairly slowly. Stretch goals would be to have multiple autonomous UAVs working together to search for a person with very high accuracy, ~95% with few false positives. Also, adding a feature that would allow the human operators to verify if a person identified by the system is the person they are looking for.
+
+
 
 
 List of video files:
 ## AMountain videos
 
-AMountain1.MOV - not labeled
+AMountain1.MOV - labeled
 
 AMountain2.MOV - labeled
 
 ## Animas1 video
 
-Animas1_0004.MOV - Not labeled
+Animas1_0004.MOV - labeled
 
 Animas1_0008.MOV - Labeled
 
-Animas1_0009.MOV - Not Labeled
+Animas1_0009.MOV - labeled
 
 ## AnimasV2 video
 
@@ -24,33 +27,33 @@ AnimasV2???? (Must be on my desktop only???)
 
 ## Cascade Creek Video
 
-CascadeCreek_0001.MOV - Not Labeled
+CascadeCreek_0001.MOV - labeled
 
-CascadeCreek_0002.MOV - Not labeled
+CascadeCreek_0002.MOV - labeled
 
-CascadeCreek_0003.MOV - Not labeled
+CascadeCreek_0003.MOV - labeled
 
 ## FallsCreek Video (lots of data)
 
-FallsCreek_0012.MOV - Not labeled
+FallsCreek_0012.MOV - labeled
 
-FallsCreek_0014.MOV - Not labeled
+FallsCreek_0014.MOV - labeled
 
 
 ## GrassyField Videos (Should be renamed before being labeled to avoid naming conflicts)
 
-xxxxxx_0003.MOV - Not labeled
+xxxxxx_0003.MOV - labeled
 
-xxxxxx_0009.MOV - Not labeled
+xxxxxx_0009.MOV - labeled
 
 
 ## HorseShoeData
 
 DJI_0001.MOV - Don't Bother (or label as all not people)
 
-DJI_0002.MOV - Don't bother (shitty data)
+DJI_0002.MOV - Don't bother (bad data)
 
-DJI_0004.MOV - Don't bother (shitty data)
+DJI_0004.MOV - Don't bother (bad data)
 
 DJI_0005.MOV - labeled
 
@@ -70,13 +73,13 @@ DJI_0013.MOV - Don't bother
 
 DJI_0014.MOV - labeled
 
-DJI_0015.MOV - not labeled (possible somebody labeled but didn't upload labels)
+DJI_0015.MOV - labeled
 
-DJI_0016.MOV - not labeled (possible somebody labeled but didn't upload labels)
+DJI_0016.MOV - labled
 
 DJI_0017.MOV - don't bother
 
-DJI_0018.MOV - not labeled (possible somebody labeled but didn't upload labels) (may not be worth it, but is at least viable)
+DJI_0018.MOV - labeled
 
 ## StochajData
 
@@ -84,7 +87,7 @@ DJI_0040.MOV - labeled
 
 DJI_0043.MOV - labeled
 
-DJI_0044.MOV - not labeled (possible somebody labeled but didn't upload labels)
+DJI_0044.MOV - labeled
 
 
 
