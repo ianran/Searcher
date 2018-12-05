@@ -1,9 +1,39 @@
-# Searcher
 ![Searcher Logo](https://github.com/ianran/Searcher/blob/master/SearcherLogo.png)
 
 Searcher is a project to aid search and rescue operations by autonomously flying an unmanned vehicle and detect where a person is. Unmanned Aerial Vehicles (UAVs) are already in use by search and rescue teams to search for people in hard to reach locations, but all of their drones require somebody to actively fly and watch video feed. We propose a system that autonomously flies and determines if a person is in the search area using machine vision and machine learning. We plan on using a drone for this project with a camera, and possibly an infrared camera to pick up heat signatures. Basic success would require developing an algorithm which would automatically detect if there is a person in a aerial image with 80% TPR and 10% FPR, and integrate the algorithm into a drone in near real-time. Near real-time is defined as the processing of frames coming once every few seconds, which would still be possible and useful if the UAV is flying fairly slowly. Stretch goals would be to have multiple autonomous UAVs working together to search for a person with very high accuracy, ~95% with few false positives. Also, adding a feature that would allow the human operators to verify if a person identified by the system is the person they are looking for.
 
+Folders:
 
+### CNN - Has code for CNN networks and training.
+Includes both an older CNN and the latest traditional CNN and CGAN code in folder called CGAN.
+
+
+
+### labelingTool - contains code for labeling data and pre processing
+
+csvToFolder.py - takes images in a folder, and moved them to other folders based on the labels in the labeled csv folder.
+
+FeedImagesToNumpy.py - takes images in a folder and compresses them for reading in easily in python. It also reads in labels and creates a one-hot encoded vector for the images as well.
+
+fileFolderToCSV.py - Takes images in different folders as returned by the labeling tool and places the labels into a csv file.
+
+labelReader.py - basic python code to read csv file and use the given labels as a python dictionary.
+
+labelToolTest.py - shows images from a folder and allows you to label the image which moves them into directories based on the label.
+
+labels.csv - Giant csv of all labels for our dataset.
+
+videoExtractor.sh - a bash script file to allow easy extraction of images from a video file using ffmpeg.
+
+### retraining - example code from tensorflow used to retrain last layer of inception, did not work.
+
+### traditionalCV - code for segmentation and older optical flow effort.
+
+#### imageSeg - image segmentation code used for final output.
+
+#### opticalFlow - old code for doing optical flow.
+
+### UI - user interface code for displaying images after processing
 
 
 List of video files:
