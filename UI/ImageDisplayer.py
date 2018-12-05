@@ -10,8 +10,6 @@
 # display = ImageDisplayer()
 # files = glob.glob('../labelingTool/feed/*.jpg')
 # display.addImgFiles(files)
-#
-# TODO: add method to show GPS coordinate along with file.
 
 import threading
 import scipy.ndimage as im
@@ -19,6 +17,7 @@ import glob
 #import matplotlib.pyplot as plt
 import tkinter as tk
 from PIL import ImageTk, Image
+from PIL.ExifTags import TAGS
 import platform
 import time
 if platform.system() == 'Windows':
@@ -55,8 +54,23 @@ class ImageDisplayer:
             im.thumbnail(self.displaySize)
             photo = ImageTk.PhotoImage(im)
 
+            # Extract GPS coordinates from iamge metadata
+            metadata = im._getexif()
+            metaTags = {}
+            for tag, val in metadata.items():
+                metaTags[TAGS.get(tag, tag)] = val
+            latMeta = metaTags['GPSInfo'][2]
+            longMeta = metaTags['GPSInfo'][4]
+            latDeg = latMeta[0][0] / latMeta[0][1]
+            latMin = latMeta[1][0] / latMeta[1][1]
+            latSec = latMeta[2][0] / latMeta[2][1]
+            longDeg = longMeta[0][0] / longMeta[0][1]
+            longMin = longMeta[1][0] / longMeta[1][1]
+            longSec = longMeta[2][0] / longMeta[2][1]
+            gpsText = "Longitude: " + str(longDeg) + "\N{DEGREE SIGN}, " + str(longMin) + "\', " + str(longSec) + "\" " + "Latitude: " + str(latDeg) + "\N{DEGREE SIGN}, " + str(latMin) + "\', " + str(latSec) + "\"" 
+
             # configure the label for updating graphics
-            label.configure(image=photo, text="Place GPS coordinates here i = " + str(self.idx))
+            label.configure(image=photo, text=gpsText)
             label.image=im
 
             # update graphics
