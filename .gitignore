@@ -1,6 +1,7 @@
 *.o
 *.jpg
 *.JPG
+!SearcherLogoStandardBlack.png
 *.gif
 *.GIF
 *.png
