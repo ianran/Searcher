@@ -1,11 +1,11 @@
 *.o
 *.jpg
 *.JPG
-!*SearcherLogoStandardBlack.png
 *.gif
 *.GIF
 *.png
 *.PNG
+!SearcherLogo.png
 *.mov
 *.MOV
 feed/
